@@ -46,6 +46,7 @@ A generic API client built on top of `HttpClient` that integrates seamlessly wit
 
 #### Features
 - Generic `IApiClient` for GET, POST, PUT, and DELETE operations.
+- `IApiClientFactory` for creating named clients using `IHttpClientFactory`.
 - Automatically handles JSON (de)serialization with case-insensitive property matching.
 - Returns `HttpResult<T>` or `HttpResult` for easy error handling and status code checking.
 - Built-in support for query parameters via anonymous objects or classes.
@@ -56,18 +57,20 @@ A generic API client built on top of `HttpClient` that integrates seamlessly wit
 
 **Registration:**
 ```csharp
-builder.Services.AddApiClient("https://api.example.com");
+// Registers IApiClientFactory and configures a named HttpClient
+builder.Services.AddApiClient("MyApi", "https://api.example.com");
 ```
 
-**Using the Client:**
+**Using the Factory:**
 ```csharp
 public class MyService
 {
     private readonly IApiClient _apiClient;
 
-    public MyService(IApiClient apiClient)
+    public MyService(IApiClientFactory apiClientFactory)
     {
-        _apiClient = apiClient;
+        // Create a client by name
+        _apiClient = apiClientFactory.CreateClient("MyApi");
     }
 
     public async Task UpdateUserAsync(UserDto user)

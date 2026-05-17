@@ -6,15 +6,15 @@ namespace MisterMoret.Results
     public class Result : IResult
     {
         public bool IsSuccess => Errors?.Count == 0;
-        public List<string> Errors { get; set; } = new List<string>();
+        public IReadOnlyList<string> Errors { get; protected set; } = new List<string>();
 
-        public static HttpResult Success()
-            => new HttpResult();
+        public static Result Success()
+            => new Result();
 
-        public static HttpResult Failure(List<string> errors)
-            => new HttpResult() { Errors = errors };
+        public static Result Failure(List<string> errors)
+            => new Result() { Errors = errors };
 
-        public static HttpResult Failure(string error)
-            => new HttpResult() { Errors = new List<string> { error } };
+        public static Result Failure(string error)
+            => new Result() { Errors = new List<string> { error } };
     }
 }

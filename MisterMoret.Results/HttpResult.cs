@@ -7,7 +7,7 @@ namespace MisterMoret.Results
     public class HttpResult : IResult
     {
         public bool IsSuccess => Errors?.Count == 0;
-        public List<string> Errors { get; set; } = new List<string>();
+        public IReadOnlyList<string> Errors { get; protected internal set; } = new List<string>();
         public HttpStatusCode Code { get; set; }
 
         public static HttpResult Success(HttpStatusCode code = HttpStatusCode.OK)

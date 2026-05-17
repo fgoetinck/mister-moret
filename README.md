@@ -1,5 +1,10 @@
 # MisterMoret
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![.NET 8.0](https://img.shields.io/badge/.NET-8.0-512bd4.svg?logo=dotnet)
+![.NET 9.0](https://img.shields.io/badge/.NET-9.0-512bd4.svg?logo=dotnet)
+![.NET 10.0](https://img.shields.io/badge/.NET-10.0-512bd4.svg?logo=dotnet)
+
 A collection of useful .NET packages for building robust applications. This repository currently contains two main packages focused on operation results and HTTP communication.
 
 > [!NOTE]  
@@ -93,6 +98,9 @@ public class MyService
 
 To use these packages, you need to configure a `nuget.config` file in your project's root directory. 
 
+> [!TIP]
+> If you are using these packages in a public repository on GitHub Actions, you can use `secrets.GITHUB_TOKEN` to authenticate.
+
 ### Option 1: Create a new `nuget.config`
 If you don't have one, create a file named `nuget.config` with the following content:
 
@@ -139,5 +147,8 @@ dotnet add package MisterMoret.Http --version 0.1.0-beta
 
 ## Future Plans
 These packages are currently being beta tested in real-world projects via GitHub Packages. They will be made publicly available on NuGet.org once they reach a stable release.
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 

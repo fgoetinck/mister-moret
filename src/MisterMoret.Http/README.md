@@ -1,5 +1,10 @@
 # MisterMoret.Http
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![.NET 8.0](https://img.shields.io/badge/.NET-8.0-512bd4.svg?logo=dotnet)
+![.NET 9.0](https://img.shields.io/badge/.NET-9.0-512bd4.svg?logo=dotnet)
+![.NET 10.0](https://img.shields.io/badge/.NET-10.0-512bd4.svg?logo=dotnet)
+
 A simple and extensible API client wrapper for .NET, built on top of `IHttpClientFactory` and integrated with `MisterMoret.Results`.
 
 > [!NOTE]  
@@ -83,3 +88,6 @@ if (result.IsSuccess)
 var query = new { Search = "Frédéric", Page = 1 };
 var result = await client.GetAsync<List<User>, object>("users", query);
 ```
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](../../LICENSE) file for details.

@@ -2,7 +2,21 @@
 
     <PropertyGroup>
         <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <Version>0.1.0-beta</Version>
+        <Authors>Frédéric Goetinck-Moret</Authors>
+        <Company>MisterMoret</Company>
+        <PackageId>$(AssemblyName)</PackageId>
+        <RepositoryUrl>https://github.com/fgoetinck/MisterMoret</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Description>A simple and extensible API client wrapper for .NET applications.</Description>
+        <PackageTags>http;api-client;dotnet;csharp</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\MisterMoret.Results\MisterMoret.Results.csproj"/>

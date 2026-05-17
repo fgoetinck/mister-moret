@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MisterMoret.Http", "MisterMoret.Http\MisterMoret.Http.csproj", "{578FBAD3-56D1-413D-8B66-1DACDCB0C3F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MisterMoret.Results", "MisterMoret.Results\MisterMoret.Results.csproj", "{D81A4F09-D3CA-4855-A36B-F4A4115A2FB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{578FBAD3-56D1-413D-8B66-1DACDCB0C3F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{578FBAD3-56D1-413D-8B66-1DACDCB0C3F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{578FBAD3-56D1-413D-8B66-1DACDCB0C3F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D81A4F09-D3CA-4855-A36B-F4A4115A2FB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D81A4F09-D3CA-4855-A36B-F4A4115A2FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D81A4F09-D3CA-4855-A36B-F4A4115A2FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D81A4F09-D3CA-4855-A36B-F4A4115A2FB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -9,7 +9,14 @@
         <RepositoryUrl>https://github.com/fgoetinck/MisterMoret</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Description>A simple and extensible API client wrapper for .NET applications.</Description>
+        <PackageTags>http;api-client;dotnet;csharp</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\MisterMoret.Results\MisterMoret.Results.csproj"/>

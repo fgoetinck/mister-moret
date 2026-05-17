@@ -9,6 +9,13 @@
         <RepositoryUrl>https://github.com/fgoetinck/MisterMoret</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Description>A lightweight implementation of the Result pattern for .NET applications.</Description>
+        <PackageTags>result-pattern;dotnet;csharp;functional</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@
 A collection of useful .NET packages for building robust applications. This repository currently contains two main packages focused on operation results and HTTP communication.
 
 > [!NOTE]  
-> These projects are currently being developed as packages and will be published in the future.
+> These packages are currently in beta and available via GitHub Packages for testing. They may be published to NuGet.org in the future.
 
 ## Packages
 
@@ -89,7 +89,55 @@ public class MyService
 }
 ```
 
+## Installation
+
+To use these packages, you need to configure a `nuget.config` file in your project's root directory. 
+
+### Option 1: Create a new `nuget.config`
+If you don't have one, create a file named `nuget.config` with the following content:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+    <add key="MisterMoret" value="https://nuget.pkg.github.com/fgoetinck/index.json" />
+  </packageSources>
+  <packageSourceCredentials>
+    <MisterMoret>
+      <add key="Username" value="YOUR_USERNAME" />
+      <add key="ClearTextPassword" value="YOUR_GITHUB_TOKEN" />
+    </MisterMoret>
+  </packageSourceCredentials>
+</configuration>
+```
+
+### Option 2: Update an existing `nuget.config`
+If you already have a `nuget.config`, add the following entries to their respective sections:
+
+**`packageSources`:**
+```xml
+<add key="MisterMoret" value="https://nuget.pkg.github.com/fgoetinck/index.json" />
+```
+
+**`packageSourceCredentials`:**
+```xml
+<MisterMoret>
+  <add key="Username" value="YOUR_USERNAME" />
+  <add key="ClearTextPassword" value="YOUR_GITHUB_TOKEN" />
+</MisterMoret>
+```
+
+---
+
+You can then install the packages via NuGet:
+
+```bash
+dotnet add package MisterMoret.Results --version 0.1.0-beta
+dotnet add package MisterMoret.Http --version 0.1.0-beta
+```
+
 ## Future Plans
-I am currently working on finalizing these packages in a private GitHub repository for testing in real-world projects before making them publicly available as NuGet packages.
+These packages are currently being beta tested in real-world projects via GitHub Packages. They will be made publicly available on NuGet.org once they reach a stable release.
 
 

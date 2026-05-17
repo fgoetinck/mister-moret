@@ -1,34 +1,36 @@
 # MisterMoret.Http
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+[![Version](https://img.shields.io/badge/version-1.0.0--beta.1-orange.svg)](https://www.nuget.org/packages/MisterMoret.Http)
 ![.NET 8.0](https://img.shields.io/badge/.NET-8.0-512bd4.svg?logo=dotnet)
 ![.NET 9.0](https://img.shields.io/badge/.NET-9.0-512bd4.svg?logo=dotnet)
 ![.NET 10.0](https://img.shields.io/badge/.NET-10.0-512bd4.svg?logo=dotnet)
+[![NuGet](https://img.shields.io/badge/NuGet-fgoetinck-blue.svg?logo=nuget)](https://www.nuget.org/profiles/fgoetinck)
+[![GitHub](https://img.shields.io/badge/GitHub-fgoetinck-181717.svg?logo=github)](https://github.com/fgoetinck)
 
-A simple and extensible API client wrapper for .NET, built on top of `IHttpClientFactory` and integrated with `MisterMoret.Results`.
+A simple and extensible **API client wrapper** for .NET, built on top of `IHttpClientFactory` and integrated with `MisterMoret.Results` for robust error handling and status code management.
 
-> [!NOTE]  
-> This package is currently in beta and available via GitHub Packages for testing. It may be published to NuGet.org in the future.
+> [!NOTE]
+> This package is currently in **beta** and available via [NuGet.org](https://www.nuget.org/).
 
-## Features
+## ✨ Features
 
-- **Named API Clients**: Easily register and use multiple API clients.
-- **Typed Responses**: Automatic JSON deserialization into typed objects.
+- **Named API Clients**: Easily register and use multiple API clients via `IApiClientFactory`.
+- **Typed Responses**: Automatic JSON (de)serialization into typed objects.
 - **Result Pattern Integration**: Returns `HttpResult<T>` instead of throwing exceptions for non-success status codes.
-- **Query Parameter Support**: Simplified way to pass query parameters.
+- **Query Parameter Support**: Simplified way to pass query parameters via anonymous objects or classes.
 - **Dependency Injection Ready**: Seamlessly integrates with `IServiceCollection`.
+- **Modern .NET Support**: Targets **.NET 8.0, 9.0, and 10.0**.
 
-## Installation
+## 🚀 Installation
 
-To use these packages, you need to configure a `nuget.config` file in your project's root directory. See the [Root README](../../README.md#installation) for detailed instructions on how to set up the GitHub Packages registry.
-
-Once configured, you can install the package via NuGet:
+Install the package via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Http --version 0.1.0-beta
+dotnet add package MisterMoret.Http --version 1.0.0-beta.1
 ```
 
-## Usage
+## 💡 Usage
 
 ### 1. Registration
 
@@ -89,5 +91,12 @@ var query = new { Search = "Frédéric", Page = 1 };
 var result = await client.GetAsync<List<User>, object>("users", query);
 ```
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](../../LICENSE) file for details.
+## ⚖️ License
+
+This project is licensed under the **MIT License** - see the [LICENSE](../../LICENSE) file for details.
+
+## 👤 Author
+
+**Frédéric Goetinck-Moret**
+- [NuGet Profile](https://www.nuget.org/profiles/fgoetinck)
+- [GitHub Profile](https://github.com/fgoetinck)

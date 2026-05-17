@@ -1,5 +1,10 @@
 # MisterMoret.Results
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![.NET 8.0](https://img.shields.io/badge/.NET-8.0-512bd4.svg?logo=dotnet)
+![.NET 9.0](https://img.shields.io/badge/.NET-9.0-512bd4.svg?logo=dotnet)
+![.NET 10.0](https://img.shields.io/badge/.NET-10.0-512bd4.svg?logo=dotnet)
+
 A lightweight implementation of the Result pattern for .NET applications.
 
 > [!NOTE]  
@@ -73,3 +78,6 @@ public HttpResult UpdateUser(int id, User user)
     return HttpResult.Success(HttpStatusCode.NoContent);
 }
 ```
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](../../LICENSE) file for details.

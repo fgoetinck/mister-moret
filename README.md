@@ -25,7 +25,7 @@ A collection of useful .NET packages for building robust applications. This repo
 ## 📦 Packages
 
 ### 1. MisterMoret.Results
-[![Version](https://img.shields.io/badge/version-1.0.0--beta.1-orange.svg)](https://www.nuget.org/packages/MisterMoret.Results)
+[![Version](https://img.shields.io/badge/version-1.0.0--beta.2-orange.svg)](https://www.nuget.org/packages/MisterMoret.Results)
 
 A lightweight implementation of the **Result pattern** to handle operation outcomes without relying on exceptions for flow control.
 
@@ -61,7 +61,7 @@ else
 ---
 
 ### 2. MisterMoret.Http
-[![Version](https://img.shields.io/badge/version-1.0.0--beta.1-orange.svg)](https://www.nuget.org/packages/MisterMoret.Http)
+[![Version](https://img.shields.io/badge/version-1.0.0--beta.2-orange.svg)](https://www.nuget.org/packages/MisterMoret.Http)
 
 A generic **API client** built on top of `HttpClient` that integrates seamlessly with `MisterMoret.Results`.
 
@@ -108,8 +108,8 @@ public class MyService(IApiClientFactory apiClientFactory)
 Install the packages via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Results --version 1.0.0-beta.1
-dotnet add package MisterMoret.Http --version 1.0.0-beta.1
+dotnet add package MisterMoret.Results --version 1.0.0-beta.2
+dotnet add package MisterMoret.Http --version 1.0.0-beta.2
 ```
 
 ## 📅 Future Plans

@@ -1,7 +1,7 @@
 # MisterMoret.Http
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-[![Version](https://img.shields.io/badge/version-1.0.0--beta.1-orange.svg)](https://www.nuget.org/packages/MisterMoret.Http)
+[![Version](https://img.shields.io/badge/version-1.0.0--beta.2-orange.svg)](https://www.nuget.org/packages/MisterMoret.Http)
 ![.NET 8.0](https://img.shields.io/badge/.NET-8.0-512bd4.svg?logo=dotnet)
 ![.NET 9.0](https://img.shields.io/badge/.NET-9.0-512bd4.svg?logo=dotnet)
 ![.NET 10.0](https://img.shields.io/badge/.NET-10.0-512bd4.svg?logo=dotnet)
@@ -27,7 +27,7 @@ A simple and extensible **API client wrapper** for .NET, built on top of `IHttpC
 Install the package via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Http --version 1.0.0-beta.1
+dotnet add package MisterMoret.Http --version 1.0.0-beta.2
 ```
 
 ## 💡 Usage

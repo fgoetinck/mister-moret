@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Net;
+using MisterMoret.Results.Interfaces;
 
 namespace MisterMoret.Results
 {
-    public class HttpResult<T> : HttpResult
+    public class HttpResult<T> : HttpResult, IResult<T>
     {
         public T Data { get; set; }
 

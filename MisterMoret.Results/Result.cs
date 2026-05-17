@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using MisterMoret.Results.Interfaces;
 
 namespace MisterMoret.Results
 {
-    public class Result
+    public class Result : IResult
     {
         public bool IsSuccess => Errors?.Count == 0;
         public List<string> Errors { get; set; } = new List<string>();

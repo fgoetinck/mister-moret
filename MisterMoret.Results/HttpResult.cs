@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Net;
+using MisterMoret.Results.Interfaces;
 
 namespace MisterMoret.Results
 {
-    public class HttpResult
+    public class HttpResult : IResult
     {
         public bool IsSuccess => Errors?.Count == 0;
         public List<string> Errors { get; set; } = new List<string>();

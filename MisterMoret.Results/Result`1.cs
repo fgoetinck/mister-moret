@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using MisterMoret.Results.Interfaces;
 
 namespace MisterMoret.Results
 {
-    public class Result<T> : Result
+    public class Result<T> : Result, IResult<T>
     {
         public T Data { get; set; }
 

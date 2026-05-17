@@ -10,10 +10,7 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         string baseAddress)
     {
-        services.AddHttpClient<IApiClient, ApiClient>(client =>
-        {
-            client.BaseAddress = new Uri(baseAddress);
-        });
+        services.AddHttpClient<IApiClient, ApiClient>(client => { client.BaseAddress = new Uri(baseAddress); });
 
         return services;
     }

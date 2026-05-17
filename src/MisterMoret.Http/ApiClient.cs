@@ -11,18 +11,18 @@ namespace MisterMoret.Http;
 
 public class ApiClient : IApiClient
 {
-    private readonly HttpClient _httpClient;
+    private const string GetErrorMessage = "Failed to get data.";
+    private const string CreateErrorMessage = "Failed to create data.";
+    private const string UpdateErrorMessage = "Failed to update data.";
+    private const string DeleteErrorMessage = "Failed to delete data.";
+    private const string JsonDeserializationErrorMessage = "Failed to deserialize data.";
 
     private static readonly JsonSerializerOptions JsonSerializerOptions = new()
     {
         PropertyNameCaseInsensitive = true
     };
 
-    private const string GetErrorMessage = "Failed to get data.";
-    private const string CreateErrorMessage = "Failed to create data.";
-    private const string UpdateErrorMessage = "Failed to update data.";
-    private const string DeleteErrorMessage = "Failed to delete data.";
-    private const string JsonDeserializationErrorMessage = "Failed to deserialize data.";
+    private readonly HttpClient _httpClient;
 
     public ApiClient(HttpClient httpClient)
     {
@@ -38,7 +38,7 @@ public class ApiClient : IApiClient
 
     public async Task<HttpResult<TResponse>> GetAsync<TResponse, TQuery>(string endpoint, TQuery query)
     {
-        string url = CreateRelativeEndpoint<TQuery>(endpoint, query);
+        string url = CreateRelativeEndpoint(endpoint, query);
         using var response = await _httpClient.GetAsync(url);
         return await HandleHttpResponse<TResponse>(response, GetErrorMessage);
     }
@@ -68,10 +68,7 @@ public class ApiClient : IApiClient
     {
         string url = CreateRelativeEndpoint(endpoint);
         using var response = await _httpClient.DeleteAsync(url);
-        if (!response.IsSuccessStatusCode)
-        {
-            return HttpResult.Failure(DeleteErrorMessage, response.StatusCode);
-        }
+        if (!response.IsSuccessStatusCode) return HttpResult.Failure(DeleteErrorMessage, response.StatusCode);
 
         return HttpResult.Success();
     }
@@ -79,16 +76,10 @@ public class ApiClient : IApiClient
     private static async Task<HttpResult<TResponse>> HandleHttpResponse<TResponse>(HttpResponseMessage response,
         string errorMessage)
     {
-        if (!response.IsSuccessStatusCode)
-        {
-            return HttpResult<TResponse>.Failure(errorMessage, response.StatusCode);
-        }
+        if (!response.IsSuccessStatusCode) return HttpResult<TResponse>.Failure(errorMessage, response.StatusCode);
 
         var data = await response.Content.ReadFromJsonAsync<TResponse>(JsonSerializerOptions);
-        if (data == null)
-        {
-            return HttpResult<TResponse>.Failure(JsonDeserializationErrorMessage, response.StatusCode);
-        }
+        if (data == null) return HttpResult<TResponse>.Failure(JsonDeserializationErrorMessage, response.StatusCode);
 
         return HttpResult<TResponse>.Success(data);
     }
@@ -97,10 +88,7 @@ public class ApiClient : IApiClient
     {
         string trimmedEndpoint = endpoint.Trim('/');
 
-        if (!_httpClient.BaseAddress.ToString().EndsWith('/'))
-        {
-            trimmedEndpoint = "/" + trimmedEndpoint;
-        }
+        if (!_httpClient.BaseAddress.ToString().EndsWith('/')) trimmedEndpoint = "/" + trimmedEndpoint;
 
         return trimmedEndpoint;
     }
@@ -112,9 +100,7 @@ public class ApiClient : IApiClient
         {
             var property = typeof(TQuery).GetProperties()[i];
             if (property.GetValue(query) != null)
-            {
                 uriQuery.Add(property.Name, property.GetValue(query)?.ToString() ?? string.Empty);
-            }
         }
 
         endpoint = CreateRelativeEndpoint(endpoint);

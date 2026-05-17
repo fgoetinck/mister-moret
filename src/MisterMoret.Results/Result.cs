@@ -9,11 +9,17 @@ public class Result : IResult
     public IReadOnlyList<string> Errors { get; protected init; } = new List<string>();
 
     public static Result Success()
-        => new Result();
+    {
+        return new Result();
+    }
 
     public static Result Failure(List<string> errors)
-        => new Result() { Errors = errors };
+    {
+        return new Result { Errors = errors };
+    }
 
     public static Result Failure(string error)
-        => new Result() { Errors = new List<string> { error } };
+    {
+        return new Result { Errors = new List<string> { error } };
+    }
 }

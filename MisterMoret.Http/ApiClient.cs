@@ -8,119 +8,118 @@ using Microsoft.AspNetCore.WebUtilities;
 using MisterMoret.Http.Interfaces;
 using MisterMoret.Results;
 
-namespace MisterMoret.Http
+namespace MisterMoret.Http;
+
+public class ApiClient : IApiClient
 {
-    public class ApiClient : IApiClient
+    private readonly HttpClient _httpClient;
+
+    private static readonly JsonSerializerOptions JsonSerializerOptions = new()
     {
-        private readonly HttpClient _httpClient;
+        PropertyNameCaseInsensitive = true
+    };
 
-        private static readonly JsonSerializerOptions JsonSerializerOptions = new()
+    private const string GetErrorMessage = "Failed to get data.";
+    private const string CreateErrorMessage = "Failed to create data.";
+    private const string UpdateErrorMessage = "Failed to update data.";
+    private const string DeleteErrorMessage = "Failed to delete data.";
+    private const string JsonDeserializationErrorMessage = "Failed to deserialize data.";
+
+    public ApiClient(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
+
+    public async Task<HttpResult<TResponse>> GetAsync<TResponse>(string endpoint)
+    {
+        string url = CreateRelativeEndpoint(endpoint);
+        using var response = await _httpClient.GetAsync(url);
+        return await HandleHttpResponse<TResponse>(response, GetErrorMessage);
+    }
+
+    public async Task<HttpResult<TResponse>> GetAsync<TResponse, TQuery>(string endpoint, TQuery query)
+    {
+        string url = CreateRelativeEndpoint<TQuery>(endpoint, query);
+        using var response = await _httpClient.GetAsync(url);
+        return await HandleHttpResponse<TResponse>(response, GetErrorMessage);
+    }
+
+    public async Task<HttpResult<TResponse>> PostAsync<TRequest, TResponse>(string endpoint, TRequest request)
+    {
+        string url = CreateRelativeEndpoint(endpoint);
+        using var response = await _httpClient.PostAsJsonAsync(url, request);
+        return await HandleHttpResponse<TResponse>(response, CreateErrorMessage);
+    }
+
+    public async Task<HttpResult<TResponse>> PutAsync<TRequest, TResponse>(string endpoint, TRequest request)
+    {
+        string url = CreateRelativeEndpoint(endpoint);
+        using var response = await _httpClient.PutAsJsonAsync(url, request);
+        return await HandleHttpResponse<TResponse>(response, UpdateErrorMessage);
+    }
+
+    public async Task<HttpResult<TResponse>> DeleteAsync<TResponse>(string endpoint)
+    {
+        string url = CreateRelativeEndpoint(endpoint);
+        using var response = await _httpClient.DeleteAsync(url);
+        return await HandleHttpResponse<TResponse>(response, DeleteErrorMessage);
+    }
+
+    public async Task<HttpResult> DeleteAsync(string endpoint)
+    {
+        string url = CreateRelativeEndpoint(endpoint);
+        using var response = await _httpClient.DeleteAsync(url);
+        if (!response.IsSuccessStatusCode)
         {
-            PropertyNameCaseInsensitive = true
-        };
-
-        private const string GetErrorMessage = "Failed to get data.";
-        private const string CreateErrorMessage = "Failed to create data.";
-        private const string UpdateErrorMessage = "Failed to update data.";
-        private const string DeleteErrorMessage = "Failed to delete data.";
-        private const string JsonDeserializationErrorMessage = "Failed to deserialize data.";
-
-        public ApiClient(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
+            return HttpResult.Failure(DeleteErrorMessage, response.StatusCode);
         }
 
-        public async Task<HttpResult<TResponse>> GetAsync<TResponse>(string endpoint)
+        return HttpResult.Success();
+    }
+
+    private static async Task<HttpResult<TResponse>> HandleHttpResponse<TResponse>(HttpResponseMessage response,
+        string errorMessage)
+    {
+        if (!response.IsSuccessStatusCode)
         {
-            var url = CreateRelativeEndpoint(endpoint);
-            using var response = await _httpClient.GetAsync(url);
-            return await HandleHttpResponse<TResponse>(response, GetErrorMessage);
+            return HttpResult<TResponse>.Failure(errorMessage, response.StatusCode);
         }
 
-        public async Task<HttpResult<TResponse>> GetAsync<TResponse, TQuery>(string endpoint, TQuery query)
+        var data = await response.Content.ReadFromJsonAsync<TResponse>(JsonSerializerOptions);
+        if (data == null)
         {
-            var url = CreateRelativeEndpoint<TQuery>(endpoint, query);
-            using var response = await _httpClient.GetAsync(url);
-            return await HandleHttpResponse<TResponse>(response, GetErrorMessage);
+            return HttpResult<TResponse>.Failure(JsonDeserializationErrorMessage, response.StatusCode);
         }
 
-        public async Task<HttpResult<TResponse>> PostAsync<TRequest, TResponse>(string endpoint, TRequest request)
+        return HttpResult<TResponse>.Success(data);
+    }
+
+    private string CreateRelativeEndpoint(string endpoint)
+    {
+        string trimmedEndpoint = endpoint.Trim('/');
+
+        if (!_httpClient.BaseAddress.ToString().EndsWith('/'))
         {
-            var url = CreateRelativeEndpoint(endpoint);
-            using var response = await _httpClient.PostAsJsonAsync(url, request);
-            return await HandleHttpResponse<TResponse>(response, CreateErrorMessage);
+            trimmedEndpoint = "/" + trimmedEndpoint;
         }
 
-        public async Task<HttpResult<TResponse>> PutAsync<TRequest, TResponse>(string endpoint, TRequest request)
-        {
-            var url = CreateRelativeEndpoint(endpoint);
-            using var response = await _httpClient.PutAsJsonAsync(url, request);
-            return await HandleHttpResponse<TResponse>(response, UpdateErrorMessage);
-        }
+        return trimmedEndpoint;
+    }
 
-        public async Task<HttpResult<TResponse>> DeleteAsync<TResponse>(string endpoint)
+    private string CreateRelativeEndpoint<TQuery>(string endpoint, TQuery query)
+    {
+        var uriQuery = new Dictionary<string, string>();
+        for (var i = 0; i < typeof(TQuery).GetProperties().Length; i++)
         {
-            var url = CreateRelativeEndpoint(endpoint);
-            using var response = await _httpClient.DeleteAsync(url);
-            return await HandleHttpResponse<TResponse>(response, DeleteErrorMessage);
-        }
-
-        public async Task<HttpResult> DeleteAsync(string endpoint)
-        {
-            var url = CreateRelativeEndpoint(endpoint);
-            using var response = await _httpClient.DeleteAsync(url);
-            if (!response.IsSuccessStatusCode)
+            var property = typeof(TQuery).GetProperties()[i];
+            if (property.GetValue(query) != null)
             {
-                return HttpResult.Failure(DeleteErrorMessage, response.StatusCode);
+                uriQuery.Add(property.Name, property.GetValue(query)?.ToString() ?? string.Empty);
             }
-
-            return HttpResult.Success();
         }
 
-        private static async Task<HttpResult<TResponse>> HandleHttpResponse<TResponse>(HttpResponseMessage response,
-            string errorMessage)
-        {
-            if (!response.IsSuccessStatusCode)
-            {
-                return HttpResult<TResponse>.Failure(errorMessage, response.StatusCode);
-            }
+        endpoint = CreateRelativeEndpoint(endpoint);
 
-            var data = await response.Content.ReadFromJsonAsync<TResponse>(JsonSerializerOptions);
-            if (data == null)
-            {
-                return HttpResult<TResponse>.Failure(JsonDeserializationErrorMessage, response.StatusCode);
-            }
-
-            return HttpResult<TResponse>.Success(data);
-        }
-
-        private string CreateRelativeEndpoint(string endpoint)
-        {
-            string trimmedEndpoint = endpoint.Trim('/');
-
-            if (!_httpClient.BaseAddress.ToString().EndsWith('/'))
-            {
-                trimmedEndpoint = "/" + trimmedEndpoint;
-            }
-
-            return trimmedEndpoint;
-        }
-        
-        private string CreateRelativeEndpoint<TQuery>(string endpoint, TQuery query)
-        {
-            var uriQuery = new Dictionary<string, string>();
-            for (int i = 0; i < typeof(TQuery).GetProperties().Length; i++)
-            {
-                var property = typeof(TQuery).GetProperties()[i];
-                if (property.GetValue(query) != null)
-                {
-                    uriQuery.Add(property.Name, property.GetValue(query)?.ToString() ?? string.Empty);
-                }
-            }
-
-            endpoint = CreateRelativeEndpoint(endpoint);
-            
-            return QueryHelpers.AddQueryString(endpoint, uriQuery);
-        }
+        return QueryHelpers.AddQueryString(endpoint, uriQuery);
     }
 }

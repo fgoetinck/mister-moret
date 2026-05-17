@@ -1,7 +1,6 @@
-namespace MisterMoret.Results.Interfaces
+namespace MisterMoret.Results.Interfaces;
+
+public interface IResult<T> : IResult
 {
-    public interface IResult<T> : IResult
-    {
-        T Data { get; set; }
-    }
+    T Data { get; set; }
 }

@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 
-namespace MisterMoret.Results.Interfaces
+namespace MisterMoret.Results.Interfaces;
+
+public interface IResult
 {
-    public interface IResult
-    {
-        bool IsSuccess { get; }
-        IReadOnlyList<string> Errors { get; }
-    }
+    bool IsSuccess { get; }
+    IReadOnlyList<string> Errors { get; }
 }

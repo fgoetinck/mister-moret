@@ -2,21 +2,20 @@ using System.Collections.Generic;
 using System.Net;
 using MisterMoret.Results.Interfaces;
 
-namespace MisterMoret.Results
+namespace MisterMoret.Results;
+
+public class HttpResult : IResult
 {
-    public class HttpResult : IResult
-    {
-        public bool IsSuccess => Errors?.Count == 0;
-        public IReadOnlyList<string> Errors { get; protected internal set; } = new List<string>();
-        public HttpStatusCode Code { get; set; }
+    public bool IsSuccess => Errors?.Count == 0;
+    public IReadOnlyList<string> Errors { get; protected internal set; } = new List<string>();
+    public HttpStatusCode Code { get; set; }
 
-        public static HttpResult Success(HttpStatusCode code = HttpStatusCode.OK)
-            => new HttpResult() { Code = code };
+    public static HttpResult Success(HttpStatusCode code = HttpStatusCode.OK)
+        => new HttpResult() { Code = code };
 
-        public static HttpResult Failure(List<string> errors, HttpStatusCode code)
-            => new HttpResult() { Errors = errors, Code = code };
+    public static HttpResult Failure(List<string> errors, HttpStatusCode code)
+        => new HttpResult() { Errors = errors, Code = code };
 
-        public static HttpResult Failure(string error, HttpStatusCode code)
-            => new HttpResult() { Errors = new List<string> { error }, Code = code };
-    }
+    public static HttpResult Failure(string error, HttpStatusCode code)
+        => new HttpResult() { Errors = new List<string> { error }, Code = code };
 }

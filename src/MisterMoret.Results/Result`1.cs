@@ -5,11 +5,11 @@ namespace MisterMoret.Results;
 
 public class Result<T> : Result, IResult<T>
 {
-    public T Data { get; set; }
+    public T Value { get; set; }
 
     public static Result<T> Success(T data)
     {
-        return new Result<T> { Data = data };
+        return new Result<T> { Value = data };
     }
 
     public new static Result<T> Failure(string error)

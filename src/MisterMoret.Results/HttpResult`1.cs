@@ -6,11 +6,11 @@ namespace MisterMoret.Results;
 
 public class HttpResult<T> : HttpResult, IResult<T>
 {
-    public T Data { get; set; }
+    public T Value { get; set; }
 
     public static HttpResult<T> Success(T data, HttpStatusCode code = HttpStatusCode.OK)
     {
-        return new HttpResult<T> { Data = data, Code = code };
+        return new HttpResult<T> { Value = data, Code = code };
     }
 
     public new static HttpResult<T> Failure(string error, HttpStatusCode code)

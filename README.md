@@ -14,6 +14,7 @@ A lightweight implementation of the Result pattern to handle operation outcomes 
 - `Result` & `Result<T>`: Standard success/failure wrapper.
 - `HttpResult` & `HttpResult<T>`: Specialized result types that include `HttpStatusCode`, perfect for Web APIs.
 - Clean and expressive API for creating results.
+- Supports **.NET 8.0, 9.0, and 10.0**.
 
 #### Usage Example
 ```csharp
@@ -45,10 +46,11 @@ A generic API client built on top of `HttpClient` that integrates seamlessly wit
 
 #### Features
 - Generic `IApiClient` for GET, POST, PUT, and DELETE operations.
-- Automatically handles JSON (de)serialization.
-- Returns `HttpResult<T>` for easy error handling and status code checking.
+- Automatically handles JSON (de)serialization with case-insensitive property matching.
+- Returns `HttpResult<T>` or `HttpResult` for easy error handling and status code checking.
 - Built-in support for query parameters via anonymous objects or classes.
 - Easy Dependency Injection setup.
+- Supports **.NET 8.0, 9.0, and 10.0**.
 
 #### Usage Example
 

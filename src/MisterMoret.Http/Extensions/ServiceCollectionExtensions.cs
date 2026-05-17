@@ -12,9 +12,22 @@ public static class ServiceCollectionExtensions
         string name,
         string baseAddress)
     {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(baseAddress);
+        
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Client name cannot be empty, or whitespace.", nameof(name));
+
+        if (string.IsNullOrWhiteSpace(baseAddress))
+            throw new ArgumentException("Base address cannot be empty, or whitespace.", nameof(baseAddress));
+
+        if (!Uri.TryCreate(baseAddress, UriKind.Absolute, out Uri? baseAddressUri))
+            throw new ArgumentException("Base address must be a valid absolute URI.", nameof(baseAddress));
+
         services.AddHttpClient(name, client =>
         {
-            client.BaseAddress = new Uri(baseAddress);
+            client.BaseAddress = baseAddressUri;
         });
         
         services.TryAddSingleton<IApiClientFactory, ApiClientFactory>();

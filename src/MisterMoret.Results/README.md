@@ -2,6 +2,9 @@
 
 A lightweight implementation of the Result pattern for .NET applications.
 
+> [!NOTE]  
+> This package is currently in beta and available via GitHub Packages for testing. It may be published to NuGet.org in the future.
+
 ## Features
 
 - **Generic `Result<T>`**: Wrap operation outcomes with data.
@@ -11,13 +14,13 @@ A lightweight implementation of the Result pattern for .NET applications.
 
 ## Installation
 
-You can install the package via NuGet:
+To use this package, you need to configure a `nuget.config` file in your project's root directory. See the [Root README](../../README.md#installation) for detailed instructions on how to set up the GitHub Packages registry.
+
+Once configured, you can install the package via NuGet:
 
 ```bash
-dotnet add package MisterMoret.Results --source https://nuget.pkg.github.com/fgoetinck/index.json
+dotnet add package MisterMoret.Results --version 0.1.0-beta
 ```
-
-*(Note: Since this is a private package, ensure your `NuGet.Config` is configured to access the GitHub Packages registry.)*
 
 ## Usage
 

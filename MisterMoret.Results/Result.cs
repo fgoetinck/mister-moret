@@ -6,7 +6,7 @@ namespace MisterMoret.Results;
 public class Result : IResult
 {
     public bool IsSuccess => Errors?.Count == 0;
-    public IReadOnlyList<string> Errors { get; protected set; } = new List<string>();
+    public IReadOnlyList<string> Errors { get; protected init; } = new List<string>();
 
     public static Result Success()
         => new Result();

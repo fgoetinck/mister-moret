@@ -8,6 +8,10 @@
 *.userosscache
 *.sln.docstates
 
+# AI generated files
+*.ai.*
+CLAUDE.md
+
 # User-specific files
 *.rsuser
 *.suo

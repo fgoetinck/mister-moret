@@ -1,5 +1,5 @@
 using System.Net.Http;
-using MisterMoret.Http.Interfaces;
+using MisterMoret.Http.Configuration;
 
 namespace MisterMoret.Http;
 
@@ -17,4 +17,6 @@ public class ApiClientFactory : IApiClientFactory
         HttpClient httpClient = _httpClientFactory.CreateClient(name);
         return new ApiClient(httpClient);
     }
+    
+    public IApiClient CreateClient() => CreateClient(ApiClientNames.Default);
 }

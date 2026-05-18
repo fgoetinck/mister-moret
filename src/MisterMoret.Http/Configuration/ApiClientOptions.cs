@@ -1,6 +1,6 @@
 using System;
 
-namespace MisterMoret.Http.Options;
+namespace MisterMoret.Http.Configuration;
 
 public class ApiClientOptions
 {

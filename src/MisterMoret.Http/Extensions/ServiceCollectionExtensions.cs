@@ -62,7 +62,7 @@ public static class ServiceCollectionExtensions
 
         services.Configure(configuration);
 
-        var httpClientBuilder = services.AddHttpClient<ApiClient>((sp, client) =>
+        var httpClientBuilder = services.AddHttpClient(ApiClientNames.Default, (sp, client) =>
         {
             var options = sp.GetRequiredService<IOptions<ApiClientOptions>>().Value;
 

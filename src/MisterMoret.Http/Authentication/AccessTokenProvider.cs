@@ -4,8 +4,13 @@ namespace MisterMoret.Http.Authentication;
 
 public class AccessTokenProvider : IAccessTokenProvider
 {
-    private readonly Dictionary<string, string?> _tokens = new();
+    private readonly Dictionary<string, string?> _tokens;
     private string? _token;
+
+    public AccessTokenProvider()
+    {
+        _tokens = new Dictionary<string, string?>();
+    }
 
     public string? GetAccessToken(string clientName) =>
         _tokens.GetValueOrDefault(clientName);

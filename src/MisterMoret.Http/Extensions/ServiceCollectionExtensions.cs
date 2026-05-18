@@ -53,4 +53,43 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+    
+    public static IServiceCollection AddApiClient(this IServiceCollection services,
+        Action<ApiClientOptions> configuration, string? authenticationScheme = null)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configuration);
+
+        services.Configure(configuration);
+
+        var httpClientBuilder = services.AddHttpClient<ApiClient>((sp, client) =>
+        {
+            var options = sp.GetRequiredService<IOptions<ApiClientOptions>>().Value;
+
+            if (string.IsNullOrWhiteSpace(options.BaseAddress))
+                throw new ArgumentException("Base address cannot be empty, or whitespace.",
+                    nameof(options.BaseAddress));
+
+            if (!Uri.TryCreate(options.BaseAddress, UriKind.Absolute, out Uri? baseAddressUri))
+                throw new ArgumentException("Base address must be a valid absolute URI.", nameof(options.BaseAddress));
+
+            client.BaseAddress = baseAddressUri;
+            client.Timeout = options.Timeout;
+
+            if (!string.IsNullOrWhiteSpace(options.UserAgent))
+                client.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
+        });
+
+        if (!string.IsNullOrWhiteSpace(authenticationScheme))
+        {
+            services.TryAddScoped<IAccessTokenProvider, AccessTokenProvider>();
+
+            httpClientBuilder.AddHttpMessageHandler(sp => new AuthenticationHandler(
+                sp.GetRequiredService<IAccessTokenProvider>(), authenticationScheme));
+        }
+
+        services.TryAddSingleton<IApiClientFactory, ApiClientFactory>();
+
+        return services;
+    }
 }

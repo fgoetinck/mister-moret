@@ -16,4 +16,6 @@ public class ApiClientFactory : IApiClientFactory
         HttpClient httpClient = _httpClientFactory.CreateClient(name);
         return new ApiClient(httpClient);
     }
+    
+    public IApiClient CreateClient() => CreateClient(string.Empty);
 }

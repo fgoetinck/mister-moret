@@ -12,6 +12,7 @@
         <Description>A simple and extensible API client wrapper for .NET applications.</Description>
         <PackageTags>http;api-client;dotnet;csharp</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReleaseNotes>See the full changelog at https://github.com/fgoetinck/mister-moret/blob/main/src/MisterMoret.Http/CHANGELOG.md</PackageReleaseNotes>
     </PropertyGroup>
 
     <PropertyGroup>

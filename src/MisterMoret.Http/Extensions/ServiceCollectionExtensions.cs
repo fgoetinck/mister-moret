@@ -49,6 +49,7 @@ public static class ServiceCollectionExtensions
             
             httpClientBuilder.AddHttpMessageHandler(sp => new AuthenticationHandler(
                 sp.GetRequiredService<IAccessTokenProvider>(),
+                name,
                 authenticationScheme));
         }
         

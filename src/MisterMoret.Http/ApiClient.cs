@@ -8,7 +8,7 @@ using MisterMoret.Results;
 
 namespace MisterMoret.Http;
 
-public class ApiClient : IApiClient
+public sealed class ApiClient : IApiClient
 {
     private const string GetErrorMessage = "Failed to get data.";
     private const string CreateErrorMessage = "Failed to create data.";
@@ -23,7 +23,7 @@ public class ApiClient : IApiClient
 
     private readonly HttpClient _httpClient;
 
-    public ApiClient(HttpClient httpClient)
+    internal ApiClient(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
@@ -87,14 +87,14 @@ public class ApiClient : IApiClient
     {
         string trimmedEndpoint = endpoint.Trim('/');
 
-        if (!_httpClient.BaseAddress.ToString().EndsWith('/')) trimmedEndpoint = "/" + trimmedEndpoint;
+        if (!_httpClient.BaseAddress!.ToString().EndsWith('/')) trimmedEndpoint = "/" + trimmedEndpoint;
 
         return trimmedEndpoint;
     }
 
     private string CreateRelativeEndpoint<TQuery>(string endpoint, TQuery query)
     {
-        var uriQuery = new Dictionary<string, string>();
+        var uriQuery = new Dictionary<string, string?>();
         for (var i = 0; i < typeof(TQuery).GetProperties().Length; i++)
         {
             var property = typeof(TQuery).GetProperties()[i];

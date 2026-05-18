@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using MisterMoret.Results;
 
-namespace MisterMoret.Http.Interfaces;
+namespace MisterMoret.Http;
 
 public interface IApiClient
 {

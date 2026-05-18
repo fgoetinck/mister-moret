@@ -3,9 +3,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using MisterMoret.Http.Configuration.Interfaces;
 
-namespace MisterMoret.Http.Configuration;
+namespace MisterMoret.Http.Authentication;
 
 public class AuthenticationHandler : DelegatingHandler
 {

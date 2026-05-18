@@ -1,6 +1,4 @@
-using MisterMoret.Http.Configuration.Interfaces;
-
-namespace MisterMoret.Http.Configuration;
+namespace MisterMoret.Http.Authentication;
 
 public class AccessTokenProvider : IAccessTokenProvider
 {

@@ -2,9 +2,8 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using MisterMoret.Http.Authentication;
 using MisterMoret.Http.Configuration;
-using MisterMoret.Http.Configuration.Interfaces;
-using MisterMoret.Http.Interfaces;
 
 namespace MisterMoret.Http.Extensions;
 

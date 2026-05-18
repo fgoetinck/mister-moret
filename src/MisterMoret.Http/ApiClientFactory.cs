@@ -1,5 +1,4 @@
 using System.Net.Http;
-using MisterMoret.Http.Interfaces;
 
 namespace MisterMoret.Http;
 

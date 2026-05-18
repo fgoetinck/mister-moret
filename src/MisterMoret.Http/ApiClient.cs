@@ -4,7 +4,6 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
-using MisterMoret.Http.Interfaces;
 using MisterMoret.Results;
 
 namespace MisterMoret.Http;

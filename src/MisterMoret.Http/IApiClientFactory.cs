@@ -1,4 +1,4 @@
-namespace MisterMoret.Http.Interfaces;
+namespace MisterMoret.Http;
 
 public interface IApiClientFactory
 {

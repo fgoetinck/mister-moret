@@ -20,7 +20,7 @@ public class AuthenticationHandler : DelegatingHandler
         _scheme = scheme;
     }
 
-    public AuthenticationHandler(IAccessTokenProvider accessTokenProvider, string name, string scheme) : this(
+    public AuthenticationHandler(IAccessTokenProvider accessTokenProvider, string scheme, string name) : this(
         accessTokenProvider, scheme)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);

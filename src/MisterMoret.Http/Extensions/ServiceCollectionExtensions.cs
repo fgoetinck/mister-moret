@@ -45,8 +45,8 @@ public static class ServiceCollectionExtensions
 
             httpClientBuilder.AddHttpMessageHandler(sp => new AuthenticationHandler(
                 sp.GetRequiredService<IAccessTokenProvider>(),
-                name,
-                authenticationScheme));
+                authenticationScheme,
+                name));
         }
 
         services.TryAddSingleton<IApiClientFactory, ApiClientFactory>();
@@ -85,7 +85,8 @@ public static class ServiceCollectionExtensions
             services.TryAddScoped<IAccessTokenProvider, AccessTokenProvider>();
 
             httpClientBuilder.AddHttpMessageHandler(sp => new AuthenticationHandler(
-                sp.GetRequiredService<IAccessTokenProvider>(), authenticationScheme));
+                sp.GetRequiredService<IAccessTokenProvider>(),
+                authenticationScheme));
         }
 
         services.TryAddSingleton<IApiClientFactory, ApiClientFactory>();

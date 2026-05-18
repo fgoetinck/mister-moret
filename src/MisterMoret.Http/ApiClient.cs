@@ -68,7 +68,7 @@ public sealed class ApiClient : IApiClient
         string url = CreateRelativeEndpoint(endpoint);
         using var response = await _httpClient.DeleteAsync(url);
         if (!response.IsSuccessStatusCode) return HttpResult.Failure(DeleteErrorMessage, response.StatusCode);
-
+        
         return HttpResult.Success();
     }
 
@@ -95,9 +95,10 @@ public sealed class ApiClient : IApiClient
     private string CreateRelativeEndpoint<TQuery>(string endpoint, TQuery query)
     {
         var uriQuery = new Dictionary<string, string?>();
-        for (var i = 0; i < typeof(TQuery).GetProperties().Length; i++)
+        var queryProperties = typeof(TQuery).GetProperties();
+        for (var i = 0; i < queryProperties.Length; i++)
         {
-            var property = typeof(TQuery).GetProperties()[i];
+            var property = queryProperties[i];
             if (property.GetValue(query) != null)
                 uriQuery.Add(property.Name, property.GetValue(query)?.ToString() ?? string.Empty);
         }

@@ -1,13 +1,14 @@
 name: Publish NuGet Packages
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   publish:
+    if:it  github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/v')
     runs-on: ubuntu-latest
     permissions:
       contents: read

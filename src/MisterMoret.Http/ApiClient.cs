@@ -28,6 +28,7 @@ public sealed class ApiClient : IApiClient
         _httpClient = httpClient;
     }
 
+    /// <inheritdoc/>
     public async Task<HttpResult<TResponse>> GetAsync<TResponse>(string endpoint)
     {
         string url = CreateRelativeEndpoint(endpoint);
@@ -35,6 +36,7 @@ public sealed class ApiClient : IApiClient
         return await HandleHttpResponse<TResponse>(response, GetErrorMessage);
     }
 
+    /// <inheritdoc/>
     public async Task<HttpResult<TResponse>> GetAsync<TResponse, TQuery>(string endpoint, TQuery query)
     {
         string url = CreateRelativeEndpoint(endpoint, query);
@@ -42,6 +44,7 @@ public sealed class ApiClient : IApiClient
         return await HandleHttpResponse<TResponse>(response, GetErrorMessage);
     }
 
+    /// <inheritdoc/>
     public async Task<HttpResult<TResponse>> PostAsync<TRequest, TResponse>(string endpoint, TRequest request)
     {
         string url = CreateRelativeEndpoint(endpoint);
@@ -49,6 +52,7 @@ public sealed class ApiClient : IApiClient
         return await HandleHttpResponse<TResponse>(response, CreateErrorMessage);
     }
 
+    /// <inheritdoc/>
     public async Task<HttpResult<TResponse>> PutAsync<TRequest, TResponse>(string endpoint, TRequest request)
     {
         string url = CreateRelativeEndpoint(endpoint);
@@ -56,6 +60,7 @@ public sealed class ApiClient : IApiClient
         return await HandleHttpResponse<TResponse>(response, UpdateErrorMessage);
     }
 
+    /// <inheritdoc/>
     public async Task<HttpResult<TResponse>> DeleteAsync<TResponse>(string endpoint)
     {
         string url = CreateRelativeEndpoint(endpoint);
@@ -63,6 +68,7 @@ public sealed class ApiClient : IApiClient
         return await HandleHttpResponse<TResponse>(response, DeleteErrorMessage);
     }
 
+    /// <inheritdoc/>
     public async Task<HttpResult> DeleteAsync(string endpoint)
     {
         string url = CreateRelativeEndpoint(endpoint);

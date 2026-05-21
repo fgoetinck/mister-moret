@@ -15,6 +15,10 @@
         <PackageReleaseNotes>See the full changelog at https://github.com/fgoetinck/mister-moret/blob/main/src/MisterMoret.Results/CHANGELOG.md</PackageReleaseNotes>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>

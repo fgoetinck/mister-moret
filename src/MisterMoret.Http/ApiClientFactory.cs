@@ -12,11 +12,13 @@ public class ApiClientFactory : IApiClientFactory
         _httpClientFactory = httpClientFactory;
     }
 
+    /// <inheritdoc/>
     public IApiClient CreateClient(string name)
     {
         HttpClient httpClient = _httpClientFactory.CreateClient(name);
         return new ApiClient(httpClient);
     }
     
+    /// <inheritdoc/>
     public IApiClient CreateClient() => CreateClient(ApiClientNames.Default);
 }

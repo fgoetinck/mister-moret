@@ -119,8 +119,8 @@ public class MyService(IApiClientFactory apiClientFactory)
 Install the packages via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Results --version 1.0.0-beta.2
-dotnet add package MisterMoret.Http --version 1.0.0-beta.2
+dotnet add package MisterMoret.Results --version 1.0.0-beta.3
+dotnet add package MisterMoret.Http --version 1.0.0-beta.3
 ```
 
 ## 📅 Future Plans

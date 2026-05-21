@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0-beta.3] - 2026-05-21
+
 ### Added
 - `ApiClientOptions` class to configure `BaseAddress`, `Timeout` (default 100 s), and `UserAgent`.
 - `AddApiClient` now accepts `Action<ApiClientOptions>` instead of a plain base address string.
@@ -14,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `IAccessTokenProvider` and `AccessTokenProvider` for scoped, in-memory token storage (per-client and global).
 - `AuthenticationHandler` (`DelegatingHandler`) for automatic bearer token injection on outgoing requests.
 - Optional `authenticationScheme` parameter on both `AddApiClient` overloads to enable authentication.
+- XML documentation comments on all public interfaces and classes.
 
 ### Changed
 - `ApiClient` is now `sealed`.

@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0-beta.3] - 2026-05-21
+
+### Added
+- XML documentation comments on all public interfaces and classes.
+- Nullable reference type annotations on `IResult` and `IResult<T>`.
+
 ## [1.0.0-beta.2] - 2026-05-17
 
 ### Fixed

@@ -9,6 +9,17 @@ namespace MisterMoret.Http.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Registers a named API client with the dependency injection container.
+    /// </summary>
+    /// <param name="services">The service collection to register the client into.</param>
+    /// <param name="name">The unique name used to identify and resolve this client.</param>
+    /// <param name="configuration">A delegate that configures the <see cref="ApiClientOptions"/> for this client.</param>
+    /// <param name="authenticationScheme">
+    /// When provided, registers an <see cref="AuthenticationHandler"/> that attaches a bearer token
+    /// for the given scheme to each outgoing request.
+    /// </param>
+    /// <returns>The original <paramref name="services"/> instance to allow chaining.</returns>
     public static IServiceCollection AddApiClient(this IServiceCollection services, string name,
         Action<ApiClientOptions> configuration, string? authenticationScheme = null)
     {
@@ -54,6 +65,16 @@ public static class ServiceCollectionExtensions
         return services;
     }
     
+    /// <summary>
+    /// Registers the default API client with the dependency injection container.
+    /// </summary>
+    /// <param name="services">The service collection to register the client into.</param>
+    /// <param name="configuration">A delegate that configures the <see cref="ApiClientOptions"/> for the default client.</param>
+    /// <param name="authenticationScheme">
+    /// When provided, registers an <see cref="AuthenticationHandler"/> that attaches a bearer token
+    /// for the given scheme to each outgoing request.
+    /// </param>
+    /// <returns>The original <paramref name="services"/> instance to allow chaining.</returns>
     public static IServiceCollection AddApiClient(this IServiceCollection services,
         Action<ApiClientOptions> configuration, string? authenticationScheme = null)
     {

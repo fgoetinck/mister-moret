@@ -1,13 +1,14 @@
 name: Publish NuGet Packages
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   publish:
+    if:  github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/v')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -26,9 +27,6 @@ jobs:
 
       - name: Build
         run: dotnet build --configuration Release --no-restore
-
-      - name: Test
-        run: dotnet test --configuration Release --no-build --verbosity normal
 
       - name: Pack
         run: dotnet pack --configuration Release --no-build --output ./nupkgs

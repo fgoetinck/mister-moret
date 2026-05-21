@@ -4,12 +4,11 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
-using MisterMoret.Http.Interfaces;
 using MisterMoret.Results;
 
 namespace MisterMoret.Http;
 
-public class ApiClient : IApiClient
+public sealed class ApiClient : IApiClient
 {
     private const string GetErrorMessage = "Failed to get data.";
     private const string CreateErrorMessage = "Failed to create data.";
@@ -24,11 +23,12 @@ public class ApiClient : IApiClient
 
     private readonly HttpClient _httpClient;
 
-    public ApiClient(HttpClient httpClient)
+    internal ApiClient(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
 
+    /// <inheritdoc/>
     public async Task<HttpResult<TResponse>> GetAsync<TResponse>(string endpoint)
     {
         string url = CreateRelativeEndpoint(endpoint);
@@ -36,6 +36,7 @@ public class ApiClient : IApiClient
         return await HandleHttpResponse<TResponse>(response, GetErrorMessage);
     }
 
+    /// <inheritdoc/>
     public async Task<HttpResult<TResponse>> GetAsync<TResponse, TQuery>(string endpoint, TQuery query)
     {
         string url = CreateRelativeEndpoint(endpoint, query);
@@ -43,6 +44,7 @@ public class ApiClient : IApiClient
         return await HandleHttpResponse<TResponse>(response, GetErrorMessage);
     }
 
+    /// <inheritdoc/>
     public async Task<HttpResult<TResponse>> PostAsync<TRequest, TResponse>(string endpoint, TRequest request)
     {
         string url = CreateRelativeEndpoint(endpoint);
@@ -50,6 +52,7 @@ public class ApiClient : IApiClient
         return await HandleHttpResponse<TResponse>(response, CreateErrorMessage);
     }
 
+    /// <inheritdoc/>
     public async Task<HttpResult<TResponse>> PutAsync<TRequest, TResponse>(string endpoint, TRequest request)
     {
         string url = CreateRelativeEndpoint(endpoint);
@@ -57,6 +60,7 @@ public class ApiClient : IApiClient
         return await HandleHttpResponse<TResponse>(response, UpdateErrorMessage);
     }
 
+    /// <inheritdoc/>
     public async Task<HttpResult<TResponse>> DeleteAsync<TResponse>(string endpoint)
     {
         string url = CreateRelativeEndpoint(endpoint);
@@ -64,12 +68,13 @@ public class ApiClient : IApiClient
         return await HandleHttpResponse<TResponse>(response, DeleteErrorMessage);
     }
 
+    /// <inheritdoc/>
     public async Task<HttpResult> DeleteAsync(string endpoint)
     {
         string url = CreateRelativeEndpoint(endpoint);
         using var response = await _httpClient.DeleteAsync(url);
         if (!response.IsSuccessStatusCode) return HttpResult.Failure(DeleteErrorMessage, response.StatusCode);
-
+        
         return HttpResult.Success();
     }
 
@@ -88,17 +93,18 @@ public class ApiClient : IApiClient
     {
         string trimmedEndpoint = endpoint.Trim('/');
 
-        if (!_httpClient.BaseAddress.ToString().EndsWith('/')) trimmedEndpoint = "/" + trimmedEndpoint;
+        if (!_httpClient.BaseAddress!.ToString().EndsWith('/')) trimmedEndpoint = "/" + trimmedEndpoint;
 
         return trimmedEndpoint;
     }
 
     private string CreateRelativeEndpoint<TQuery>(string endpoint, TQuery query)
     {
-        var uriQuery = new Dictionary<string, string>();
-        for (var i = 0; i < typeof(TQuery).GetProperties().Length; i++)
+        var uriQuery = new Dictionary<string, string?>();
+        var queryProperties = typeof(TQuery).GetProperties();
+        for (var i = 0; i < queryProperties.Length; i++)
         {
-            var property = typeof(TQuery).GetProperties()[i];
+            var property = queryProperties[i];
             if (property.GetValue(query) != null)
                 uriQuery.Add(property.Name, property.GetValue(query)?.ToString() ?? string.Empty);
         }

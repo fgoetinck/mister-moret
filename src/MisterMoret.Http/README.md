@@ -1,7 +1,7 @@
 # MisterMoret.Http
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-[![Version](https://img.shields.io/badge/version-1.0.0--beta.2-orange.svg)](https://www.nuget.org/packages/MisterMoret.Http)
+[![NuGet](https://img.shields.io/nuget/vpre/MisterMoret.Http.svg)](https://www.nuget.org/packages/MisterMoret.Http)
 ![.NET 8.0](https://img.shields.io/badge/.NET-8.0-512bd4.svg?logo=dotnet)
 ![.NET 9.0](https://img.shields.io/badge/.NET-9.0-512bd4.svg?logo=dotnet)
 ![.NET 10.0](https://img.shields.io/badge/.NET-10.0-512bd4.svg?logo=dotnet)
@@ -19,6 +19,8 @@ A simple and extensible **API client wrapper** for .NET, built on top of `IHttpC
 - **Typed Responses**: Automatic JSON (de)serialization into typed objects.
 - **Result Pattern Integration**: Returns `HttpResult<T>` instead of throwing exceptions for non-success status codes.
 - **Query Parameter Support**: Simplified way to pass query parameters via anonymous objects or classes.
+- **Authentication Support**: Built-in bearer token injection via `IAccessTokenProvider`, with per-client or global token management.
+- **Configurable Options**: Control base address, timeout, and user-agent through `ApiClientOptions`.
 - **Dependency Injection Ready**: Seamlessly integrates with `IServiceCollection`.
 - **Modern .NET Support**: Targets **.NET 8.0, 9.0, and 10.0**.
 
@@ -27,7 +29,7 @@ A simple and extensible **API client wrapper** for .NET, built on top of `IHttpC
 Install the package via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Http --version 1.0.0-beta.2
+dotnet add package MisterMoret.Http --version 1.0.0-beta.3
 ```
 
 ## 💡 Usage
@@ -41,8 +43,19 @@ using MisterMoret.Http.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register a named client with a base address
-builder.Services.AddApiClient("MyService", "https://api.example.com/v1/");
+// Register a named client
+builder.Services.AddApiClient("MyService", options =>
+{
+    options.BaseAddress = "https://api.example.com/v1/";
+    options.Timeout = TimeSpan.FromSeconds(30); // optional, default is 100s
+    options.UserAgent = "MyApp/1.0";            // optional
+});
+
+// Register a default (unnamed) client
+builder.Services.AddApiClient(options =>
+{
+    options.BaseAddress = "https://api.example.com/v1/";
+});
 ```
 
 ### 2. Basic Usage
@@ -50,26 +63,32 @@ builder.Services.AddApiClient("MyService", "https://api.example.com/v1/");
 Inject `IApiClientFactory` and create a client by name:
 
 ```csharp
-using MisterMoret.Http.Interfaces;
+using MisterMoret.Http;
 
 public class MyService(IApiClientFactory apiClientFactory)
 {
     public async Task<string?> GetUserName(int userId)
     {
         var client = apiClientFactory.CreateClient("MyService");
-        
+
         // Returns an HttpResult<User>
         var result = await client.GetAsync<User>($"users/{userId}");
-        
+
         if (result.IsSuccess)
         {
             return result.Value.Name;
         }
-        
+
         // Handle failure (e.g., result.Code, result.Errors)
         return null;
     }
 }
+```
+
+When using the default client, call `CreateClient()` without arguments:
+
+```csharp
+var client = apiClientFactory.CreateClient();
 ```
 
 ### 3. POST/PUT with JSON
@@ -90,6 +109,37 @@ if (result.IsSuccess)
 var query = new { Search = "Frédéric", Page = 1 };
 var result = await client.GetAsync<List<User>, object>("users", query);
 ```
+
+### 5. Authentication
+
+Pass an authentication scheme when registering a client to enable bearer token injection:
+
+```csharp
+builder.Services.AddApiClient("MyService", options =>
+{
+    options.BaseAddress = "https://api.example.com/v1/";
+}, "Bearer");
+```
+
+This registers `IAccessTokenProvider` as a scoped service. Inject it wherever you obtain a token (e.g. after login) and store it for the client:
+
+```csharp
+using MisterMoret.Http.Authentication;
+
+public class AuthService(IAccessTokenProvider tokenProvider)
+{
+    public void StoreToken(string token)
+    {
+        // Scoped to a specific named client
+        tokenProvider.SetAccessToken("MyService", token);
+
+        // Or globally, for clients registered without a name
+        tokenProvider.SetAccessToken(token);
+    }
+}
+```
+
+The `AuthenticationHandler` automatically reads the token and attaches it as an `Authorization` header on every outgoing request for that client.
 
 ## ⚖️ License
 

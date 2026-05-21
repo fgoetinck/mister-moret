@@ -1,7 +1,7 @@
 # MisterMoret.Results
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-[![Version](https://img.shields.io/badge/version-1.0.0--beta.2-orange.svg)](https://www.nuget.org/packages/MisterMoret.Results)
+[![NuGet](https://img.shields.io/nuget/vpre/MisterMoret.Results.svg)](https://www.nuget.org/packages/MisterMoret.Results)
 ![.NET 8.0](https://img.shields.io/badge/.NET-8.0-512bd4.svg?logo=dotnet)
 ![.NET 9.0](https://img.shields.io/badge/.NET-9.0-512bd4.svg?logo=dotnet)
 ![.NET 10.0](https://img.shields.io/badge/.NET-10.0-512bd4.svg?logo=dotnet)
@@ -26,7 +26,7 @@ A lightweight implementation of the **Result pattern** for .NET applications, pr
 Install the package via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Results --version 1.0.0-beta.2
+dotnet add package MisterMoret.Results --version 1.0.0-beta.3
 ```
 
 ## 💡 Usage

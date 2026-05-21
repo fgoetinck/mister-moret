@@ -7,9 +7,9 @@ namespace MisterMoret.Results;
 public class HttpResult<T> : HttpResult, IResult<T>
 {
     /// <summary>
-    /// Gets or sets the value carried by this result.
+    /// Gets the value carried by this result.
     /// </summary>
-    public T Value { get; set; }
+    public T? Value { get; protected init; }
 
     /// <summary>
     /// Creates a successful result carrying the specified value and HTTP status code.

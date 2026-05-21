@@ -3,7 +3,7 @@ namespace MisterMoret.Results.Interfaces;
 public interface IResult<T> : IResult
 {
     /// <summary>
-    /// Gets or sets the value produced by the operation. Only meaningful when <see cref="IResult.IsSuccess"/> is <see langword="true"/>.
+    /// Gets the value produced by the operation. Only meaningful when <see cref="IResult.IsSuccess"/> is <see langword="true"/>.
     /// </summary>
-    T Value { get; set; }
+    T? Value { get; }
 }

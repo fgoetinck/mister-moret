@@ -19,7 +19,7 @@ public class HttpResult : IResult
     /// <summary>
     /// Gets the list of error messages associated with this result.
     /// </summary>
-    public IReadOnlyList<string> Errors { get; protected init; } = new List<string>();
+    public IReadOnlyList<string>? Errors { get; protected init; } = new List<string>();
 
     /// <summary>
     /// Creates a successful result with the specified HTTP status code.

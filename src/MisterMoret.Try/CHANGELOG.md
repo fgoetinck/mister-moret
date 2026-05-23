@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+- **Breaking**: `TryOperations` has been split into two sealed classes: `TryOperation` and `TryHttpOperation`.
+- **Breaking**: `TryOperationAsync` has been renamed to `TryOperation.ExecuteAsync`.
+- **Breaking**: `TryHttpOperationAsync` has been renamed to `TryHttpOperation.ExecuteAsync`.
+- **Breaking**: Replace `using static MisterMoret.Try.TryOperations;` with `using MisterMoret.Try;`.
+
 ## [1.0.0-beta.1] - 2026-05-23
 
 ### Added

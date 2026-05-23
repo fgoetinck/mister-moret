@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0-beta.1] - 2026-05-23
+
 ### Added
 - `TryOperationAsync<T>(Func<Task<T>>)` — auto-wraps the return value in `Result<T>.Success`.
 - `TryOperationAsync(Func<Task>)` — auto-wraps a void operation in `Result.Success`.

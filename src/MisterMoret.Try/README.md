@@ -19,7 +19,7 @@ A lightweight try/catch wrapper that converts unhandled exceptions into failed `
 - **Result Integration**: Works seamlessly with `MisterMoret.Results` — returns `Result<T>`, `Result`, `HttpResult<T>`, and `HttpResult`.
 - **HTTP-Aware**: Maps HTTP-related exceptions to meaningful `HttpStatusCode` values automatically.
 - **Auto-Wrapping**: Pass a plain `Func<Task<T>>` and let the library wrap the return value in a result for you.
-- **Zero Boilerplate**: Use `using static` to call methods without any class prefix.
+- **Zero Boilerplate**: Import the namespace once and call methods directly via the class name.
 - **Modern .NET Support**: Targets **.NET 8.0, 9.0, and 10.0**.
 
 ## 🚀 Installation
@@ -27,18 +27,18 @@ A lightweight try/catch wrapper that converts unhandled exceptions into failed `
 Install the package via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Try
+dotnet add package MisterMoret.Try --version 1.0.0-beta.2
 ```
 
 ## 💡 Usage
 
-Add a `using static` directive to call the methods directly without a class prefix:
+Add a `using` directive to bring the classes into scope:
 
 ```csharp
-using static MisterMoret.Try.TryOperations;
+using MisterMoret.Try;
 ```
 
-### `TryOperationAsync` — Result Overloads
+### `TryOperation.ExecuteAsync` — Result Overloads
 
 Use when you want a `Result` or `Result<T>` back.
 
@@ -46,7 +46,7 @@ Use when you want a `Result` or `Result<T>` back.
 
 ```csharp
 // Returns Result<User>
-var result = await TryOperationAsync(() => _repository.GetUserAsync(id));
+var result = await TryOperation.ExecuteAsync(() => _repository.GetUserAsync(id));
 
 if (result.IsSuccess)
 {
@@ -64,7 +64,7 @@ else
 **Manual result** — use when you need to return a failure or perform validation inside the delegate:
 
 ```csharp
-var result = await TryOperationAsync(async () =>
+var result = await TryOperation.ExecuteAsync(async () =>
 {
     var user = await _repository.GetUserAsync(id);
     if (user == null)
@@ -73,7 +73,7 @@ var result = await TryOperationAsync(async () =>
 });
 ```
 
-### `TryHttpOperationAsync` — HttpResult Overloads
+### `TryHttpOperation.ExecuteAsync` — HttpResult Overloads
 
 Use when you want an `HttpResult` or `HttpResult<T>` back. HTTP-related exceptions are mapped to appropriate status codes automatically.
 
@@ -81,7 +81,7 @@ Use when you want an `HttpResult` or `HttpResult<T>` back. HTTP-related exceptio
 
 ```csharp
 // Returns HttpResult<User>
-var result = await TryHttpOperationAsync(() => _repository.GetUserAsync(id));
+var result = await TryHttpOperation.ExecuteAsync(() => _repository.GetUserAsync(id));
 
 if (result.IsSuccess)
 {
@@ -96,12 +96,12 @@ else if (result.Code == HttpStatusCode.RequestTimeout)
 **Manual result** — use when you need control over the success status code:
 
 ```csharp
-var result = await TryHttpOperationAsync(() => _apiClient.GetAsync<User>("users/1"));
+var result = await TryHttpOperation.ExecuteAsync(() => _apiClient.GetAsync<User>("users/1"));
 ```
 
 #### Exception Mapping
 
-Applies to all `TryHttpOperationAsync` overloads:
+Applies to all `TryHttpOperation.ExecuteAsync` overloads:
 
 | Exception | Status Code |
 |---|---|

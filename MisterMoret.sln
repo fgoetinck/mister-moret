@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MisterMoret.Http", "src\Mis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MisterMoret.Results", "src\MisterMoret.Results\MisterMoret.Results.csproj", "{D81A4F09-D3CA-4855-A36B-F4A4115A2FB7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MisterMoret.Try", "src\MisterMoret.Try\MisterMoret.Try.csproj", "{A9399116-DB73-4690-9F44-30B6355129DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{D81A4F09-D3CA-4855-A36B-F4A4115A2FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D81A4F09-D3CA-4855-A36B-F4A4115A2FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D81A4F09-D3CA-4855-A36B-F4A4115A2FB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9399116-DB73-4690-9F44-30B6355129DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9399116-DB73-4690-9F44-30B6355129DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9399116-DB73-4690-9F44-30B6355129DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9399116-DB73-4690-9F44-30B6355129DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <Version>1.0.0-beta.1</Version>
+        <Authors>Frédéric Goetinck-Moret</Authors>
+        <Company>MisterMoret</Company>
+        <PackageId>$(AssemblyName)</PackageId>
+        <RepositoryUrl>https://github.com/fgoetinck/mister-moret</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Description>A lightweight try/catch wrapper that converts unhandled exceptions into failed Result or HttpResult objects, eliminating boilerplate exception handling in .NET applications.</Description>
+        <PackageTags>result-pattern;try;exception-handling;dotnet;csharp;functional</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReleaseNotes>See the full changelog at https://github.com/fgoetinck/mister-moret/blob/main/src/MisterMoret.Try/CHANGELOG.md</PackageReleaseNotes>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MisterMoret.Results\MisterMoret.Results.csproj" />
+    </ItemGroup>
+
+</Project>

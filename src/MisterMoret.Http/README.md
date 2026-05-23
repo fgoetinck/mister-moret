@@ -29,7 +29,7 @@ A simple and extensible **API client wrapper** for .NET, built on top of `IHttpC
 Install the package via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Http --version 1.0.0-beta.3
+dotnet add package MisterMoret.Http --version 1.0.0-beta.4
 ```
 
 ## 💡 Usage

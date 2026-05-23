@@ -27,7 +27,7 @@ A lightweight try/catch wrapper that converts unhandled exceptions into failed `
 Install the package via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Try
+dotnet add package MisterMoret.Try --version 1.0.0-beta.2
 ```
 
 ## 💡 Usage

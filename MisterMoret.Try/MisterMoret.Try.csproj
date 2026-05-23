@@ -20,4 +20,8 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\src\MisterMoret.Results\MisterMoret.Results.csproj" />
+    </ItemGroup>
+
 </Project>

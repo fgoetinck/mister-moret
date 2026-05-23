@@ -81,7 +81,11 @@ public sealed class ApiClient : IApiClient
     private static async Task<HttpResult<TResponse>> HandleHttpResponse<TResponse>(HttpResponseMessage response,
         string errorMessage)
     {
-        if (!response.IsSuccessStatusCode) return HttpResult<TResponse>.Failure(errorMessage, response.StatusCode);
+        if (!response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<HttpResult<TResponse>>(JsonSerializerOptions)
+                ?? HttpResult<TResponse>.Failure(errorMessage, response.StatusCode);
+        }
 
         var data = await response.Content.ReadFromJsonAsync<TResponse>(JsonSerializerOptions);
         if (data == null) return HttpResult<TResponse>.Failure(JsonDeserializationErrorMessage, response.StatusCode);

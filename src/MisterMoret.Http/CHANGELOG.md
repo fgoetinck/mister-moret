@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0-beta.5] - 2026-05-24
+
+### Fixed
+- `ApiClient` now attempts to deserialize non-success response bodies as `HttpResult<TResponse>` before falling back to a generic failure. This allows servers that return a structured `HttpResult` error payload to propagate their error messages directly to the caller.
+
 ## [1.0.0-beta.4] - 2026-05-21
 
 ### Fixed

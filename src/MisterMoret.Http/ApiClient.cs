@@ -8,6 +8,17 @@ using MisterMoret.Results;
 
 namespace MisterMoret.Http;
 
+/// <summary>
+/// A sealed, typed HTTP client that executes REST verb operations against a pre-configured base address and maps
+/// HTTP responses to <see cref="HttpResult{T}"/> or <see cref="HttpResult"/> values.
+/// </summary>
+/// <remarks>
+/// On a non-success HTTP response, each method first attempts to deserialize the response body as
+/// <see cref="HttpResult{TResponse}"/>. When deserialization succeeds, the server-supplied result — including any
+/// error details — is returned directly. When deserialization fails or yields <see langword="null"/>, a generic
+/// failure result containing a fallback error message and the HTTP status code is returned instead.
+/// Instances are created exclusively by <see cref="ApiClientFactory"/> and cannot be subclassed.
+/// </remarks>
 public sealed class ApiClient : IApiClient
 {
     private const string GetErrorMessage = "Failed to get data.";
@@ -74,14 +85,18 @@ public sealed class ApiClient : IApiClient
         string url = CreateRelativeEndpoint(endpoint);
         using var response = await _httpClient.DeleteAsync(url);
         if (!response.IsSuccessStatusCode) return HttpResult.Failure(DeleteErrorMessage, response.StatusCode);
-        
+
         return HttpResult.Success();
     }
 
     private static async Task<HttpResult<TResponse>> HandleHttpResponse<TResponse>(HttpResponseMessage response,
         string errorMessage)
     {
-        if (!response.IsSuccessStatusCode) return HttpResult<TResponse>.Failure(errorMessage, response.StatusCode);
+        if (!response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<HttpResult<TResponse>>(JsonSerializerOptions)
+                ?? HttpResult<TResponse>.Failure(errorMessage, response.StatusCode);
+        }
 
         var data = await response.Content.ReadFromJsonAsync<TResponse>(JsonSerializerOptions);
         if (data == null) return HttpResult<TResponse>.Failure(JsonDeserializationErrorMessage, response.StatusCode);

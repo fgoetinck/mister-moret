@@ -70,7 +70,7 @@ A generic **API client** built on top of `HttpClient` that integrates seamlessly
 - **Generic Client**: `IApiClient` for standard CRUD operations.
 - **Named Clients**: `IApiClientFactory` integration with `IHttpClientFactory`.
 - **Auto-Serialization**: Handles JSON (de)serialization with case-insensitive property matching.
-- **Result Integration**: Returns `HttpResult<T>` for robust error handling.
+- **Result Integration**: Returns `HttpResult<T>` for robust error handling. On non-success responses, structured error bodies from the server are surfaced directly when available.
 - **Query Support**: Built-in support for query parameters via objects.
 - **Authentication Support**: Built-in bearer token injection via `IAccessTokenProvider`.
 - **Configurable Options**: Control base address, timeout, and user-agent through `ApiClientOptions`.

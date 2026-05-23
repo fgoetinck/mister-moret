@@ -17,7 +17,7 @@ A simple and extensible **API client wrapper** for .NET, built on top of `IHttpC
 
 - **Named API Clients**: Easily register and use multiple API clients via `IApiClientFactory`.
 - **Typed Responses**: Automatic JSON (de)serialization into typed objects.
-- **Result Pattern Integration**: Returns `HttpResult<T>` instead of throwing exceptions for non-success status codes.
+- **Result Pattern Integration**: Returns `HttpResult<T>` instead of throwing exceptions for non-success status codes. When the server returns a structured `HttpResult` error body, its errors are surfaced directly; otherwise a generic failure is returned.
 - **Query Parameter Support**: Simplified way to pass query parameters via anonymous objects or classes.
 - **Authentication Support**: Built-in bearer token injection via `IAccessTokenProvider`, with per-client or global token management.
 - **Configurable Options**: Control base address, timeout, and user-agent through `ApiClientOptions`.
@@ -79,7 +79,8 @@ public class MyService(IApiClientFactory apiClientFactory)
             return result.Value.Name;
         }
 
-        // Handle failure (e.g., result.Code, result.Errors)
+        // Handle failure — result.Errors contains messages from the server's error body
+        // if it returned a structured HttpResult, or a generic fallback message otherwise.
         return null;
     }
 }

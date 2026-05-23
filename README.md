@@ -125,14 +125,14 @@ A lightweight **try/catch wrapper** that converts unhandled exceptions into fail
 #### ✨ Key Features
 - **Exception-Safe Execution**: Wrap any async delegate and receive a failed result instead of a thrown exception.
 - **HTTP-Aware**: Maps `HttpRequestException` and timeouts to meaningful `HttpStatusCode` values.
-- **Zero Boilerplate**: Use `using static` to call methods without any class prefix.
+- **Zero Boilerplate**: Use `using MisterMoret.Try;` and call `TryOperation.ExecuteAsync(...)` or `TryHttpOperation.ExecuteAsync(...)` directly.
 - **Modern .NET**: Fully supports **.NET 8.0, 9.0, and 10.0**.
 
 #### 💡 Usage Example
 ```csharp
-using static MisterMoret.Try.TryOperations;
+using MisterMoret.Try;
 
-var result = await TryOperationAsync(() => _repository.GetUserAsync(id));
+var result = await TryOperation.ExecuteAsync(() => _repository.GetUserAsync(id));
 
 if (result.IsSuccess)
 {

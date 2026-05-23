@@ -9,7 +9,7 @@ namespace MisterMoret.Try;
 /// try/catch boundary and translate any thrown exception into a failed <see cref="Result"/>,
 /// preventing unhandled exceptions from escaping the call site.
 /// </summary>
-public sealed class TryOperation
+public static class TryOperation
 {
     /// <summary>
     /// Executes an asynchronous operation that returns a <see cref="Result{T}"/> and

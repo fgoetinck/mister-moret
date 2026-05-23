@@ -12,7 +12,7 @@ namespace MisterMoret.Try;
 /// <see cref="HttpStatusCode"/> values on the returned <see cref="HttpResult"/>,
 /// preventing unhandled exceptions from escaping the call site.
 /// </summary>
-public sealed class TryHttpOperation
+public static class TryHttpOperation
 {
     /// <summary>
     /// Executes an asynchronous HTTP operation that returns an <see cref="HttpResult{T}"/>

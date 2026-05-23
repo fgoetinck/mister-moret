@@ -9,8 +9,8 @@
         <RepositoryUrl>https://github.com/fgoetinck/mister-moret</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <Description>-</Description>
-        <PackageTags>-</PackageTags>
+        <Description>A lightweight try/catch wrapper that converts unhandled exceptions into failed Result or HttpResult objects, eliminating boilerplate exception handling in .NET applications.</Description>
+        <PackageTags>result-pattern;try;exception-handling;dotnet;csharp;functional</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageReleaseNotes>See the full changelog at https://github.com/fgoetinck/mister-moret/blob/main/src/MisterMoret.Try/CHANGELOG.md</PackageReleaseNotes>
     </PropertyGroup>
@@ -21,7 +21,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\MisterMoret.Results\MisterMoret.Results.csproj" />
+      <ProjectReference Include="..\MisterMoret.Results\MisterMoret.Results.csproj" />
     </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MisterMoret.Http", "src\Mis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MisterMoret.Results", "src\MisterMoret.Results\MisterMoret.Results.csproj", "{D81A4F09-D3CA-4855-A36B-F4A4115A2FB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MisterMoret.Try", "MisterMoret.Try\MisterMoret.Try.csproj", "{A9399116-DB73-4690-9F44-30B6355129DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MisterMoret.Try", "src\MisterMoret.Try\MisterMoret.Try.csproj", "{A9399116-DB73-4690-9F44-30B6355129DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

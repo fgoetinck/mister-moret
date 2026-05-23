@@ -7,7 +7,7 @@
 [![NuGet](https://img.shields.io/badge/NuGet-fgoetinck-blue.svg?logo=nuget)](https://www.nuget.org/profiles/fgoetinck)
 [![GitHub](https://img.shields.io/badge/GitHub-fgoetinck-181717.svg?logo=github)](https://github.com/fgoetinck)
 
-A collection of useful .NET packages for building robust applications. This repository currently contains two main packages focused on operation results and HTTP communication.
+A collection of useful .NET packages for building robust applications. This repository currently contains three packages focused on operation results, HTTP communication, and exception-safe execution.
 
 > [!NOTE]
 > These packages are currently in **beta** and available via [NuGet.org](https://www.nuget.org/).
@@ -17,6 +17,7 @@ A collection of useful .NET packages for building robust applications. This repo
 - [📦 Packages](#-packages)
   - [📦 MisterMoret.Results](#1-mistermoretresults)
   - [📦 MisterMoret.Http](#2-mistermorethttp)
+  - [📦 MisterMoret.Try](#3-mistermorrettry)
 - [🚀 Installation](#-installation)
 - [📅 Future Plans](#-future-plans)
 - [⚖️ License](#️-license)
@@ -114,13 +115,43 @@ public class MyService(IApiClientFactory apiClientFactory)
 }
 ```
 
+---
+
+### 3. MisterMoret.Try
+[![NuGet](https://img.shields.io/nuget/vpre/MisterMoret.Try.svg)](https://www.nuget.org/packages/MisterMoret.Try)
+
+A lightweight **try/catch wrapper** that converts unhandled exceptions into failed `Result` or `HttpResult` objects, eliminating boilerplate exception handling.
+
+#### ✨ Key Features
+- **Exception-Safe Execution**: Wrap any async delegate and receive a failed result instead of a thrown exception.
+- **HTTP-Aware**: Maps `HttpRequestException` and timeouts to meaningful `HttpStatusCode` values.
+- **Zero Boilerplate**: Use `using static` to call methods without any class prefix.
+- **Modern .NET**: Fully supports **.NET 8.0, 9.0, and 10.0**.
+
+#### 💡 Usage Example
+```csharp
+using static MisterMoret.Try.TryOperations;
+
+var result = await TryOperationAsync(() => _repository.GetUserAsync(id));
+
+if (result.IsSuccess)
+{
+    Console.WriteLine(result.Value.Name);
+}
+else
+{
+    Console.WriteLine(string.Join(", ", result.Errors));
+}
+```
+
 ## 🚀 Installation
 
 Install the packages via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Results --version 1.0.0-beta.3
-dotnet add package MisterMoret.Http --version 1.0.0-beta.3
+dotnet add package MisterMoret.Results
+dotnet add package MisterMoret.Http
+dotnet add package MisterMoret.Try
 ```
 
 ## 📅 Future Plans

@@ -13,10 +13,10 @@ namespace MisterMoret.Http;
 /// HTTP responses to <see cref="HttpResult{T}"/> or <see cref="HttpResult"/> values.
 /// </summary>
 /// <remarks>
-/// On a non-success HTTP response, each method first attempts to deserialize the response body as
-/// <see cref="HttpResult{TResponse}"/>. When deserialization succeeds, the server-supplied result — including any
-/// error details — is returned directly. When deserialization fails or yields <see langword="null"/>, a generic
-/// failure result containing a fallback error message and the HTTP status code is returned instead.
+/// On a non-success HTTP response, each method attempts to deserialize the response body into an internal
+/// <c>ApiErrorResponse</c> record and extract its <c>errors</c> array. When one or more errors are present they are
+/// forwarded directly to the returned <see cref="HttpResult{T}"/> failure. When the array is absent or empty, a
+/// generic fallback error message is used instead. In both cases the HTTP status code is preserved on the result.
 /// Instances are created exclusively by <see cref="ApiClientFactory"/> and cannot be subclassed.
 /// </remarks>
 public sealed class ApiClient : IApiClient

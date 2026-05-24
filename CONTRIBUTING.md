@@ -48,11 +48,13 @@ By participating in this project, you are expected to uphold standard profession
 ## 🛠️ Pull Requests
 
 1. **Fork** the repository.
-2. **Create a new branch** for your feature or bug fix:
+2. **Create a new branch** for your feature, bug fix, or hotfix:
    ```bash
    git checkout -b feature/your-feature-name
    # or
    git checkout -b fix/your-fix-name
+   # or (for critical fixes that go directly to main)
+   git checkout -b hotfix/your-fix-name
    ```
 3. **Make your changes** following the existing code style.
 4. **Commit your changes**:
@@ -63,7 +65,9 @@ By participating in this project, you are expected to uphold standard profession
    ```bash
    git push origin feature/your-feature-name
    ```
-6. **Open a Pull Request** against the `dev` branch.
+6. **Open a Pull Request**:
+   - `feature/*` and `fix/*` branches → open against `dev`.
+   - `hotfix/*` branches → open against `main`. These trigger an immediate NuGet publish and require a version bump. After merging, backmerge `main` into `dev`.
 
 ## 🚀 Development Setup
 

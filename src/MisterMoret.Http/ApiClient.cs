@@ -89,13 +89,18 @@ public sealed class ApiClient : IApiClient
         return HttpResult.Success();
     }
 
+    private sealed record ApiErrorResponse(List<string>? Errors);
+
     private static async Task<HttpResult<TResponse>> HandleHttpResponse<TResponse>(HttpResponseMessage response,
         string errorMessage)
     {
         if (!response.IsSuccessStatusCode)
         {
-            return await response.Content.ReadFromJsonAsync<HttpResult<TResponse>>(JsonSerializerOptions)
-                ?? HttpResult<TResponse>.Failure(errorMessage, response.StatusCode);
+            var apiError = await response.Content.ReadFromJsonAsync<ApiErrorResponse>(JsonSerializerOptions);
+            if (apiError?.Errors?.Count > 0)
+                return HttpResult<TResponse>.Failure(apiError.Errors, response.StatusCode);
+
+            return HttpResult<TResponse>.Failure(errorMessage, response.StatusCode);
         }
 
         var data = await response.Content.ReadFromJsonAsync<TResponse>(JsonSerializerOptions);

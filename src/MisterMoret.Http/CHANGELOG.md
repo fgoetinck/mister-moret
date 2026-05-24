@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0-beta.6] - 2026-05-24
+
+### Fixed
+- `ApiClient` no longer misreports non-success responses as successful. The previous approach deserialized error response bodies directly as `HttpResult<TResponse>`, but `protected init` setters prevented the JSON deserializer from populating `Errors`, causing every deserialized failure to appear as a success with no value. Error bodies are now deserialized into an intermediate `ApiErrorResponse` record, and the extracted errors are used to construct a correct `HttpResult<TResponse>.Failure`.
+
 ## [1.0.0-beta.5] - 2026-05-24
 
 ### Fixed

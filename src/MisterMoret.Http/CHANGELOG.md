@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- All `IApiClient` / `ApiClient` methods now accept an optional `CancellationToken cancellationToken = default` as their last parameter: `GetAsync<TResponse>`, `GetAsync<TResponse, TQuery>`, `PostAsync<TRequest, TResponse>`, `PutAsync<TRequest, TResponse>`, `DeleteAsync<TResponse>`, and `DeleteAsync`.
+
 ## [1.0.0-beta.6] - 2026-05-24
 
 ### Fixed

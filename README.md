@@ -34,7 +34,6 @@ A lightweight implementation of the **Result pattern** to handle operation outco
 - **Success/Failure Wrapper**: `Result` & `Result<T>` for standard outcomes.
 - **Web API Ready**: `HttpResult` & `HttpResult<T>` specialized for HTTP status codes.
 - **Expressive API**: Clean syntax for creating and handling results.
-- **Modern .NET**: Fully supports **.NET 8.0, 9.0, and 10.0**.
 
 #### 💡 Usage Example
 ```csharp
@@ -67,52 +66,23 @@ else
 A generic **API client** built on top of `HttpClient` that integrates seamlessly with `MisterMoret.Results`.
 
 #### ✨ Key Features
-- **Generic Client**: `IApiClient` for standard CRUD operations.
+- **Generic Client**: `IApiClient` for standard CRUD operations returning `HttpResult<T>`.
 - **Named Clients**: `IApiClientFactory` integration with `IHttpClientFactory`.
-- **Auto-Serialization**: Handles JSON (de)serialization with case-insensitive property matching.
-- **Result Integration**: Returns `HttpResult<T>` for robust error handling. On non-success responses, structured error bodies from the server are surfaced directly when available.
-- **Query Support**: Built-in support for query parameters via objects.
+- **Auto-Serialization**: JSON (de)serialization with case-insensitive property matching.
+- **Query & Cancellation Support**: Built-in query parameter support and optional `CancellationToken` on all methods.
 - **Authentication Support**: Built-in bearer token injection via `IAccessTokenProvider`.
-- **Configurable Options**: Control base address, timeout, and user-agent through `ApiClientOptions`.
-- **Modern .NET**: Fully supports **.NET 8.0, 9.0, and 10.0**.
 
 #### 💡 Usage Example
-
-**Registration:**
 ```csharp
-// Register a named client
 builder.Services.AddApiClient("MyApi", options =>
 {
     options.BaseAddress = "https://api.example.com";
 });
 
-// Optionally enable bearer token authentication
-builder.Services.AddApiClient("MyApi", options =>
-{
-    options.BaseAddress = "https://api.example.com";
-}, "Bearer");
-```
-
-**Using the Factory:**
-```csharp
-public class MyService(IApiClientFactory apiClientFactory)
-{
-    private readonly IApiClient _apiClient = apiClientFactory.CreateClient("MyApi");
-
-    public async Task UpdateUserAsync(UserDto user)
-    {
-        var result = await _apiClient.PutAsync<UserDto, UserResponse>("users", user);
-
-        if (result.IsSuccess)
-        {
-            // Handle success
-        }
-        else if (result.Code == HttpStatusCode.Unauthorized)
-        {
-            // Handle unauthorized
-        }
-    }
-}
+// In a service
+var result = await _apiClient.GetAsync<User>($"users/{id}", cancellationToken);
+if (result.IsSuccess)
+    return result.Value;
 ```
 
 ---
@@ -127,7 +97,6 @@ A lightweight **try/catch wrapper** that converts unhandled exceptions into fail
 - **HTTP-Aware**: Maps `HttpRequestException` and timeouts to meaningful `HttpStatusCode` values.
 - **Custom Error Messages**: Supply an optional `exceptionMapper` delegate to control the error message on failure instead of using `Exception.Message`.
 - **Zero Boilerplate**: Use `using MisterMoret.Try;` and call `TryOperation.Execute(...)` / `TryOperation.ExecuteAsync(...)` or `TryHttpOperation.ExecuteAsync(...)` directly.
-- **Modern .NET**: Fully supports **.NET 8.0, 9.0, and 10.0**.
 
 #### 💡 Usage Example
 ```csharp
@@ -168,5 +137,3 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 **Frédéric Goetinck-Moret**
 - [NuGet Profile](https://www.nuget.org/profiles/fgoetinck)
 - [GitHub Profile](https://github.com/fgoetinck)
-
-

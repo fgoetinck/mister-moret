@@ -123,9 +123,9 @@ public class MyService(IApiClientFactory apiClientFactory)
 A lightweight **try/catch wrapper** that converts unhandled exceptions into failed `Result` or `HttpResult` objects, eliminating boilerplate exception handling.
 
 #### ✨ Key Features
-- **Exception-Safe Execution**: Wrap any async delegate and receive a failed result instead of a thrown exception.
+- **Exception-Safe Execution**: Wrap any synchronous or asynchronous delegate and receive a failed result instead of a thrown exception.
 - **HTTP-Aware**: Maps `HttpRequestException` and timeouts to meaningful `HttpStatusCode` values.
-- **Zero Boilerplate**: Use `using MisterMoret.Try;` and call `TryOperation.ExecuteAsync(...)` or `TryHttpOperation.ExecuteAsync(...)` directly.
+- **Zero Boilerplate**: Use `using MisterMoret.Try;` and call `TryOperation.Execute(...)` / `TryOperation.ExecuteAsync(...)` or `TryHttpOperation.ExecuteAsync(...)` directly.
 - **Modern .NET**: Fully supports **.NET 8.0, 9.0, and 10.0**.
 
 #### 💡 Usage Example

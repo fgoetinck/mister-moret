@@ -28,7 +28,8 @@ public static class TryOperation
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<Result<T>> ExecuteAsync<T>(Func<Task<Result<T>>> operation)
+    public static async Task<Result<T>> ExecuteAsync<T>(Func<Task<Result<T>>> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -37,10 +38,11 @@ public static class TryOperation
         }
         catch (Exception e)
         {
-            return Result<T>.Failure(e.Message);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return Result<T>.Failure(message);
         }
     }
-    
+
     /// <summary>
     /// Executes a synchronous operation that returns a <see cref="Result{T}"/> and
     /// catches any unhandled exception, returning it as a failed result instead of
@@ -58,7 +60,8 @@ public static class TryOperation
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static Result<T> Execute<T>(Func<Result<T>> operation)
+    public static Result<T> Execute<T>(Func<Result<T>> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -67,7 +70,8 @@ public static class TryOperation
         }
         catch (Exception e)
         {
-            return Result<T>.Failure(e.Message);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return Result<T>.Failure(message);
         }
     }
 
@@ -87,7 +91,8 @@ public static class TryOperation
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<Result> ExecuteAsync(Func<Task<Result>> operation)
+    public static async Task<Result> ExecuteAsync(Func<Task<Result>> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -96,7 +101,8 @@ public static class TryOperation
         }
         catch (Exception e)
         {
-            return Result.Failure(e.Message);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return Result.Failure(message);
         }
     }
 
@@ -116,7 +122,8 @@ public static class TryOperation
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static Result Execute(Func<Result> operation)
+    public static Result Execute(Func<Result> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -125,7 +132,8 @@ public static class TryOperation
         }
         catch (Exception e)
         {
-            return Result.Failure(e.Message);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return Result.Failure(message);
         }
     }
 
@@ -146,7 +154,8 @@ public static class TryOperation
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<Result<T>> ExecuteAsync<T>(Func<Task<T>> operation)
+    public static async Task<Result<T>> ExecuteAsync<T>(Func<Task<T>> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -155,7 +164,8 @@ public static class TryOperation
         }
         catch (Exception e)
         {
-            return Result<T>.Failure(e.Message);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return Result<T>.Failure(message);
         }
     }
 
@@ -176,7 +186,8 @@ public static class TryOperation
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static Result<T> Execute<T>(Func<T> operation)
+    public static Result<T> Execute<T>(Func<T> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -185,7 +196,8 @@ public static class TryOperation
         }
         catch (Exception e)
         {
-            return Result<T>.Failure(e.Message);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return Result<T>.Failure(message);
         }
     }
 
@@ -205,7 +217,8 @@ public static class TryOperation
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<Result> ExecuteAsync(Func<Task> operation)
+    public static async Task<Result> ExecuteAsync(Func<Task> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -215,10 +228,11 @@ public static class TryOperation
         }
         catch (Exception e)
         {
-            return Result.Failure(e.Message);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return Result.Failure(message);
         }
     }
-    
+
     /// <summary>
     /// Executes a synchronous operation that produces no value and wraps a successful
     /// outcome in a <see cref="Result"/>, catching any unhandled exception and returning
@@ -235,17 +249,19 @@ public static class TryOperation
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static Result Execute(Action operation)
+    public static Result Execute(Action operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
         {
-             operation();
+            operation();
             return Result.Success();
         }
         catch (Exception e)
         {
-            return Result.Failure(e.Message);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return Result.Failure(message);
         }
     }
 }

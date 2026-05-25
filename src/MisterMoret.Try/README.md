@@ -15,10 +15,11 @@ A lightweight try/catch wrapper that converts unhandled exceptions into failed `
 
 ## ✨ Features
 
-- **Exception-Safe Execution**: Wrap any async delegate and receive a failed result instead of a thrown exception.
+- **Exception-Safe Execution**: Wrap any synchronous or asynchronous delegate and receive a failed result instead of a thrown exception.
 - **Result Integration**: Works seamlessly with `MisterMoret.Results` — returns `Result<T>`, `Result`, `HttpResult<T>`, and `HttpResult`.
 - **HTTP-Aware**: Maps HTTP-related exceptions to meaningful `HttpStatusCode` values automatically.
 - **Auto-Wrapping**: Pass a plain `Func<Task<T>>` and let the library wrap the return value in a result for you.
+- **Custom Error Messages**: Supply an optional `exceptionMapper` delegate to control the error message on failure instead of using `Exception.Message`.
 - **Zero Boilerplate**: Import the namespace once and call methods directly via the class name.
 - **Modern .NET Support**: Targets **.NET 8.0, 9.0, and 10.0**.
 
@@ -27,7 +28,7 @@ A lightweight try/catch wrapper that converts unhandled exceptions into failed `
 Install the package via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Try --version 1.0.0-beta.2
+dotnet add package MisterMoret.Try --version 1.0.0-beta.3
 ```
 
 ## 💡 Usage
@@ -38,9 +39,11 @@ Add a `using` directive to bring the classes into scope:
 using MisterMoret.Try;
 ```
 
-### `TryOperation.ExecuteAsync` — Result Overloads
+### `TryOperation` — Result Overloads
 
-Use when you want a `Result` or `Result<T>` back.
+Use when you want a `Result` or `Result<T>` back. Both synchronous and asynchronous delegates are supported.
+
+#### Asynchronous (`ExecuteAsync`)
 
 **Auto-wrapping** — pass a plain delegate and the result is created for you:
 
@@ -72,6 +75,69 @@ var result = await TryOperation.ExecuteAsync(async () =>
     return Result<User>.Success(user);
 });
 ```
+
+#### Synchronous (`Execute`)
+
+Use the same patterns with synchronous delegates when async is not needed:
+
+**Auto-wrapping** — wraps the return value in `Result<T>.Success`:
+
+```csharp
+// Returns Result<User>
+var result = TryOperation.Execute(() => _repository.GetUser(id));
+
+if (result.IsSuccess)
+{
+    Console.WriteLine(result.Value.Name);
+}
+else
+{
+    foreach (var error in result.Errors)
+    {
+        Console.WriteLine($"Error: {error}");
+    }
+}
+```
+
+**Manual result** — use when you need to return a failure or perform validation inside the delegate:
+
+```csharp
+var result = TryOperation.Execute(() =>
+{
+    var user = _repository.GetUser(id);
+    if (user == null)
+        return Result<User>.Failure("User not found.");
+    return Result<User>.Success(user);
+});
+```
+
+**Void action** — wraps a side-effecting operation in `Result.Success`:
+
+```csharp
+var result = TryOperation.Execute(() => _repository.DeleteUser(id));
+
+if (!result.IsSuccess)
+{
+    Console.WriteLine(string.Join(", ", result.Errors));
+}
+```
+
+#### Custom Error Messages (`exceptionMapper`)
+
+All `TryOperation` overloads accept an optional `Func<Exception, string>? exceptionMapper` parameter. When supplied, the delegate produces the error message on failure instead of `Exception.Message`. The parameter is positional, so pass it after the operation delegate:
+
+```csharp
+var result = await TryOperation.ExecuteAsync(
+    () => _repository.GetUserAsync(id),
+    ex => $"Failed to load user {id}: {ex.GetType().Name}");
+
+if (!result.IsSuccess)
+{
+    Console.WriteLine(result.Errors[0]); // "Failed to load user 42: InvalidOperationException"
+}
+```
+
+When `exceptionMapper` is omitted or `null`, the behaviour is unchanged — `Exception.Message` is used.
 
 ### `TryHttpOperation.ExecuteAsync` — HttpResult Overloads
 
@@ -109,6 +175,16 @@ Applies to all `TryHttpOperation.ExecuteAsync` overloads:
 | `HttpRequestException` (with embedded code) | Embedded `HttpStatusCode` |
 | `HttpRequestException` (no embedded code) | `503 Service Unavailable` |
 | Any other `Exception` | `500 Internal Server Error` |
+
+#### Custom Error Messages (`exceptionMapper`)
+
+All `TryHttpOperation.ExecuteAsync` overloads accept the same optional `Func<Exception, string>? exceptionMapper` parameter. It controls only the error message — the HTTP status code mapping above is unaffected:
+
+```csharp
+var result = await TryHttpOperation.ExecuteAsync(
+    () => _apiClient.GetAsync<User>("users/1"),
+    ex => "Upstream service is unavailable. Please try again later.");
+```
 
 ## ⚖️ License
 

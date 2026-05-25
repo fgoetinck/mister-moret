@@ -19,6 +19,7 @@ A simple and extensible **API client wrapper** for .NET, built on top of `IHttpC
 - **Typed Responses**: Automatic JSON (de)serialization into typed objects.
 - **Result Pattern Integration**: Returns `HttpResult<T>` instead of throwing exceptions for non-success status codes. When the server returns a structured `HttpResult` error body, its errors are surfaced directly; otherwise a generic failure is returned.
 - **Query Parameter Support**: Simplified way to pass query parameters via anonymous objects or classes.
+- **Cancellation Support**: Every HTTP verb method accepts an optional `CancellationToken` as its last parameter.
 - **Authentication Support**: Built-in bearer token injection via `IAccessTokenProvider`, with per-client or global token management.
 - **Configurable Options**: Control base address, timeout, and user-agent through `ApiClientOptions`.
 - **Dependency Injection Ready**: Seamlessly integrates with `IServiceCollection`.
@@ -29,7 +30,7 @@ A simple and extensible **API client wrapper** for .NET, built on top of `IHttpC
 Install the package via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Http --version 1.0.0-beta.6
+dotnet add package MisterMoret.Http --version 1.0.0-beta.7
 ```
 
 ## 💡 Usage
@@ -65,14 +66,21 @@ Inject `IApiClientFactory` and create a client by name:
 ```csharp
 using MisterMoret.Http;
 
-public class MyService(IApiClientFactory apiClientFactory)
+public class MyService
 {
-    public async Task<string?> GetUserName(int userId)
+    private readonly IApiClientFactory _apiClientFactory;
+
+    public MyService(IApiClientFactory apiClientFactory)
     {
-        var client = apiClientFactory.CreateClient("MyService");
+        _apiClientFactory = apiClientFactory;
+    }
+
+    public async Task<string?> GetUserName(int userId, CancellationToken cancellationToken = default)
+    {
+        var client = _apiClientFactory.CreateClient("MyService");
 
         // Returns an HttpResult<User>
-        var result = await client.GetAsync<User>($"users/{userId}");
+        var result = await client.GetAsync<User>($"users/{userId}", cancellationToken);
 
         if (result.IsSuccess)
         {
@@ -127,15 +135,22 @@ This registers `IAccessTokenProvider` as a scoped service. Inject it wherever yo
 ```csharp
 using MisterMoret.Http.Authentication;
 
-public class AuthService(IAccessTokenProvider tokenProvider)
+public class AuthService
 {
+    private readonly IAccessTokenProvider _tokenProvider;
+
+    public AuthService(IAccessTokenProvider tokenProvider)
+    {
+        _tokenProvider = tokenProvider;
+    }
+
     public void StoreToken(string token)
     {
         // Scoped to a specific named client
-        tokenProvider.SetAccessToken("MyService", token);
+        _tokenProvider.SetAccessToken("MyService", token);
 
         // Or globally, for clients registered without a name
-        tokenProvider.SetAccessToken(token);
+        _tokenProvider.SetAccessToken(token);
     }
 }
 ```

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 using MisterMoret.Results;
@@ -40,50 +41,50 @@ public sealed class ApiClient : IApiClient
     }
 
     /// <inheritdoc/>
-    public async Task<HttpResult<TResponse>> GetAsync<TResponse>(string endpoint)
+    public async Task<HttpResult<TResponse>> GetAsync<TResponse>(string endpoint, CancellationToken cancellationToken = default)
     {
         string url = CreateRelativeEndpoint(endpoint);
-        using var response = await _httpClient.GetAsync(url);
-        return await HandleHttpResponse<TResponse>(response, GetErrorMessage);
+        using var response = await _httpClient.GetAsync(url, cancellationToken);
+        return await HandleHttpResponse<TResponse>(response, GetErrorMessage, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<HttpResult<TResponse>> GetAsync<TResponse, TQuery>(string endpoint, TQuery query)
+    public async Task<HttpResult<TResponse>> GetAsync<TResponse, TQuery>(string endpoint, TQuery query, CancellationToken cancellationToken = default)
     {
         string url = CreateRelativeEndpoint(endpoint, query);
-        using var response = await _httpClient.GetAsync(url);
-        return await HandleHttpResponse<TResponse>(response, GetErrorMessage);
+        using var response = await _httpClient.GetAsync(url, cancellationToken);
+        return await HandleHttpResponse<TResponse>(response, GetErrorMessage, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<HttpResult<TResponse>> PostAsync<TRequest, TResponse>(string endpoint, TRequest request)
+    public async Task<HttpResult<TResponse>> PostAsync<TRequest, TResponse>(string endpoint, TRequest request, CancellationToken cancellationToken = default)
     {
         string url = CreateRelativeEndpoint(endpoint);
-        using var response = await _httpClient.PostAsJsonAsync(url, request);
-        return await HandleHttpResponse<TResponse>(response, CreateErrorMessage);
+        using var response = await _httpClient.PostAsJsonAsync(url, request, cancellationToken);
+        return await HandleHttpResponse<TResponse>(response, CreateErrorMessage, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<HttpResult<TResponse>> PutAsync<TRequest, TResponse>(string endpoint, TRequest request)
+    public async Task<HttpResult<TResponse>> PutAsync<TRequest, TResponse>(string endpoint, TRequest request, CancellationToken cancellationToken = default)
     {
         string url = CreateRelativeEndpoint(endpoint);
-        using var response = await _httpClient.PutAsJsonAsync(url, request);
-        return await HandleHttpResponse<TResponse>(response, UpdateErrorMessage);
+        using var response = await _httpClient.PutAsJsonAsync(url, request, cancellationToken);
+        return await HandleHttpResponse<TResponse>(response, UpdateErrorMessage, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<HttpResult<TResponse>> DeleteAsync<TResponse>(string endpoint)
+    public async Task<HttpResult<TResponse>> DeleteAsync<TResponse>(string endpoint, CancellationToken cancellationToken = default)
     {
         string url = CreateRelativeEndpoint(endpoint);
-        using var response = await _httpClient.DeleteAsync(url);
-        return await HandleHttpResponse<TResponse>(response, DeleteErrorMessage);
+        using var response = await _httpClient.DeleteAsync(url, cancellationToken);
+        return await HandleHttpResponse<TResponse>(response, DeleteErrorMessage, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<HttpResult> DeleteAsync(string endpoint)
+    public async Task<HttpResult> DeleteAsync(string endpoint, CancellationToken cancellationToken = default)
     {
         string url = CreateRelativeEndpoint(endpoint);
-        using var response = await _httpClient.DeleteAsync(url);
+        using var response = await _httpClient.DeleteAsync(url, cancellationToken);
         if (!response.IsSuccessStatusCode) return HttpResult.Failure(DeleteErrorMessage, response.StatusCode);
 
         return HttpResult.Success();
@@ -92,18 +93,18 @@ public sealed class ApiClient : IApiClient
     private sealed record ApiErrorResponse(List<string>? Errors);
 
     private static async Task<HttpResult<TResponse>> HandleHttpResponse<TResponse>(HttpResponseMessage response,
-        string errorMessage)
+        string errorMessage, CancellationToken cancellationToken)
     {
         if (!response.IsSuccessStatusCode)
         {
-            var apiError = await response.Content.ReadFromJsonAsync<ApiErrorResponse>(JsonSerializerOptions);
+            var apiError = await response.Content.ReadFromJsonAsync<ApiErrorResponse>(JsonSerializerOptions, cancellationToken);
             if (apiError?.Errors?.Count > 0)
                 return HttpResult<TResponse>.Failure(apiError.Errors, response.StatusCode);
 
             return HttpResult<TResponse>.Failure(errorMessage, response.StatusCode);
         }
 
-        var data = await response.Content.ReadFromJsonAsync<TResponse>(JsonSerializerOptions);
+        var data = await response.Content.ReadFromJsonAsync<TResponse>(JsonSerializerOptions, cancellationToken);
         if (data == null) return HttpResult<TResponse>.Failure(JsonDeserializationErrorMessage, response.StatusCode);
 
         return HttpResult<TResponse>.Success(data);

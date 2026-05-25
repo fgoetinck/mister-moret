@@ -26,7 +26,7 @@ A lightweight implementation of the **Result pattern** for .NET applications, pr
 Install the package via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Results --version 1.0.0-beta.4
+dotnet add package MisterMoret.Results --version 1.0.0-beta.5
 ```
 
 ## 💡 Usage

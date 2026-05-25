@@ -49,15 +49,22 @@ public static class TryHttpOperation
     /// <param name="operation">
     /// The asynchronous delegate to invoke. Cannot be <see langword="null"/>.
     /// </param>
+    /// <param name="exceptionMapper">
+    /// An optional delegate that maps a caught <see cref="Exception"/> to a custom error message.
+    /// When <see langword="null"/>, <see cref="Exception.Message"/> is used instead.
+    /// </param>
     /// <returns>
     /// The <see cref="HttpResult{T}"/> produced by <paramref name="operation"/> when it
-    /// completes without throwing, or a failed <see cref="HttpResult{T}"/> with an error
-    /// message and HTTP status code derived from the caught exception.
+    /// completes without throwing, or a failed <see cref="HttpResult{T}"/> with an HTTP status
+    /// code derived from the caught exception and an error message produced by
+    /// <paramref name="exceptionMapper"/> when supplied, falling back to
+    /// <see cref="Exception.Message"/> otherwise.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<HttpResult<T>> ExecuteAsync<T>(Func<Task<HttpResult<T>>> operation)
+    public static async Task<HttpResult<T>> ExecuteAsync<T>(Func<Task<HttpResult<T>>> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -66,15 +73,18 @@ public static class TryHttpOperation
         }
         catch (TaskCanceledException e) when (e.InnerException is TimeoutException)
         {
-            return HttpResult<T>.Failure(e.Message, HttpStatusCode.RequestTimeout);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult<T>.Failure(message, HttpStatusCode.RequestTimeout);
         }
         catch (HttpRequestException e)
         {
-            return HttpResult<T>.Failure(e.Message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult<T>.Failure(message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
         }
         catch (Exception e)
         {
-            return HttpResult<T>.Failure(e.Message, HttpStatusCode.InternalServerError);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult<T>.Failure(message, HttpStatusCode.InternalServerError);
         }
     }
 
@@ -112,15 +122,22 @@ public static class TryHttpOperation
     /// <param name="operation">
     /// The asynchronous delegate to invoke. Cannot be <see langword="null"/>.
     /// </param>
+    /// <param name="exceptionMapper">
+    /// An optional delegate that maps a caught <see cref="Exception"/> to a custom error message.
+    /// When <see langword="null"/>, <see cref="Exception.Message"/> is used instead.
+    /// </param>
     /// <returns>
     /// The <see cref="HttpResult"/> produced by <paramref name="operation"/> when it
-    /// completes without throwing, or a failed <see cref="HttpResult"/> with an error
-    /// message and HTTP status code derived from the caught exception.
+    /// completes without throwing, or a failed <see cref="HttpResult"/> with an HTTP status
+    /// code derived from the caught exception and an error message produced by
+    /// <paramref name="exceptionMapper"/> when supplied, falling back to
+    /// <see cref="Exception.Message"/> otherwise.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<HttpResult> ExecuteAsync(Func<Task<HttpResult>> operation)
+    public static async Task<HttpResult> ExecuteAsync(Func<Task<HttpResult>> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -129,15 +146,18 @@ public static class TryHttpOperation
         }
         catch (TaskCanceledException e) when (e.InnerException is TimeoutException)
         {
-            return HttpResult.Failure(e.Message, HttpStatusCode.RequestTimeout);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult.Failure(message, HttpStatusCode.RequestTimeout);
         }
         catch (HttpRequestException e)
         {
-            return HttpResult.Failure(e.Message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult.Failure(message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
         }
         catch (Exception e)
         {
-            return HttpResult.Failure(e.Message, HttpStatusCode.InternalServerError);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult.Failure(message, HttpStatusCode.InternalServerError);
         }
     }
 
@@ -177,15 +197,22 @@ public static class TryHttpOperation
     /// <param name="operation">
     /// The asynchronous delegate to invoke. Cannot be <see langword="null"/>.
     /// </param>
+    /// <param name="exceptionMapper">
+    /// An optional delegate that maps a caught <see cref="Exception"/> to a custom error message.
+    /// When <see langword="null"/>, <see cref="Exception.Message"/> is used instead.
+    /// </param>
     /// <returns>
     /// A successful <see cref="HttpResult{T}"/> with <see cref="HttpStatusCode.OK"/> carrying
     /// the value returned by <paramref name="operation"/>, or a failed <see cref="HttpResult{T}"/>
-    /// with an error message and HTTP status code derived from the caught exception.
+    /// with an HTTP status code derived from the caught exception and an error message produced by
+    /// <paramref name="exceptionMapper"/> when supplied, falling back to
+    /// <see cref="Exception.Message"/> otherwise.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<HttpResult<T>> ExecuteAsync<T>(Func<Task<T>> operation)
+    public static async Task<HttpResult<T>> ExecuteAsync<T>(Func<Task<T>> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -194,15 +221,18 @@ public static class TryHttpOperation
         }
         catch (TaskCanceledException e) when (e.InnerException is TimeoutException)
         {
-            return HttpResult<T>.Failure(e.Message, HttpStatusCode.RequestTimeout);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult<T>.Failure(message, HttpStatusCode.RequestTimeout);
         }
         catch (HttpRequestException e)
         {
-            return HttpResult<T>.Failure(e.Message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult<T>.Failure(message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
         }
         catch (Exception e)
         {
-            return HttpResult<T>.Failure(e.Message, HttpStatusCode.InternalServerError);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult<T>.Failure(message, HttpStatusCode.InternalServerError);
         }
     }
 
@@ -241,15 +271,22 @@ public static class TryHttpOperation
     /// <param name="operation">
     /// The asynchronous delegate to invoke. Cannot be <see langword="null"/>.
     /// </param>
+    /// <param name="exceptionMapper">
+    /// An optional delegate that maps a caught <see cref="Exception"/> to a custom error message.
+    /// When <see langword="null"/>, <see cref="Exception.Message"/> is used instead.
+    /// </param>
     /// <returns>
     /// A successful <see cref="HttpResult"/> with <see cref="HttpStatusCode.OK"/> when
     /// <paramref name="operation"/> completes without throwing, or a failed <see cref="HttpResult"/>
-    /// with an error message and HTTP status code derived from the caught exception.
+    /// with an HTTP status code derived from the caught exception and an error message produced by
+    /// <paramref name="exceptionMapper"/> when supplied, falling back to
+    /// <see cref="Exception.Message"/> otherwise.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<HttpResult> ExecuteAsync(Func<Task> operation)
+    public static async Task<HttpResult> ExecuteAsync(Func<Task> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -259,15 +296,18 @@ public static class TryHttpOperation
         }
         catch (TaskCanceledException e) when (e.InnerException is TimeoutException)
         {
-            return HttpResult.Failure(e.Message, HttpStatusCode.RequestTimeout);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult.Failure(message, HttpStatusCode.RequestTimeout);
         }
         catch (HttpRequestException e)
         {
-            return HttpResult.Failure(e.Message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult.Failure(message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
         }
         catch (Exception e)
         {
-            return HttpResult.Failure(e.Message, HttpStatusCode.InternalServerError);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult.Failure(message, HttpStatusCode.InternalServerError);
         }
     }
 }

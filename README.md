@@ -125,6 +125,7 @@ A lightweight **try/catch wrapper** that converts unhandled exceptions into fail
 #### ✨ Key Features
 - **Exception-Safe Execution**: Wrap any synchronous or asynchronous delegate and receive a failed result instead of a thrown exception.
 - **HTTP-Aware**: Maps `HttpRequestException` and timeouts to meaningful `HttpStatusCode` values.
+- **Custom Error Messages**: Supply an optional `exceptionMapper` delegate to control the error message on failure instead of using `Exception.Message`.
 - **Zero Boilerplate**: Use `using MisterMoret.Try;` and call `TryOperation.Execute(...)` / `TryOperation.ExecuteAsync(...)` or `TryHttpOperation.ExecuteAsync(...)` directly.
 - **Modern .NET**: Fully supports **.NET 8.0, 9.0, and 10.0**.
 

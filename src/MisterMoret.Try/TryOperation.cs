@@ -40,6 +40,19 @@ public static class TryOperation
             return Result<T>.Failure(e.Message);
         }
     }
+    
+    public static Result<T> Execute<T>(Func<Result<T>> operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        try
+        {
+            return operation();
+        }
+        catch (Exception e)
+        {
+            return Result<T>.Failure(e.Message);
+        }
+    }
 
     /// <summary>
     /// Executes an asynchronous operation that returns a <see cref="Result"/> and
@@ -63,6 +76,19 @@ public static class TryOperation
         try
         {
             return await operation();
+        }
+        catch (Exception e)
+        {
+            return Result.Failure(e.Message);
+        }
+    }
+
+    public static Result Execute(Func<Result> operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        try
+        {
+            return operation();
         }
         catch (Exception e)
         {
@@ -100,6 +126,19 @@ public static class TryOperation
         }
     }
 
+    public static Result<T> Execute<T>(Func<T> operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        try
+        {
+            return Result<T>.Success(operation());
+        }
+        catch (Exception e)
+        {
+            return Result<T>.Failure(e.Message);
+        }
+    }
+
     /// <summary>
     /// Executes an asynchronous operation that produces no value and wraps a successful
     /// outcome in a <see cref="Result"/>, catching any unhandled exception and returning
@@ -122,6 +161,20 @@ public static class TryOperation
         try
         {
             await operation();
+            return Result.Success();
+        }
+        catch (Exception e)
+        {
+            return Result.Failure(e.Message);
+        }
+    }
+    
+    public static Result Execute(Action operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        try
+        {
+             operation();
             return Result.Success();
         }
         catch (Exception e)

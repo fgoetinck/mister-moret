@@ -57,7 +57,8 @@ public static class TryHttpOperation
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<HttpResult<T>> ExecuteAsync<T>(Func<Task<HttpResult<T>>> operation)
+    public static async Task<HttpResult<T>> ExecuteAsync<T>(Func<Task<HttpResult<T>>> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -66,15 +67,18 @@ public static class TryHttpOperation
         }
         catch (TaskCanceledException e) when (e.InnerException is TimeoutException)
         {
-            return HttpResult<T>.Failure(e.Message, HttpStatusCode.RequestTimeout);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult<T>.Failure(message, HttpStatusCode.RequestTimeout);
         }
         catch (HttpRequestException e)
         {
-            return HttpResult<T>.Failure(e.Message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult<T>.Failure(message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
         }
         catch (Exception e)
         {
-            return HttpResult<T>.Failure(e.Message, HttpStatusCode.InternalServerError);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult<T>.Failure(message, HttpStatusCode.InternalServerError);
         }
     }
 
@@ -120,7 +124,8 @@ public static class TryHttpOperation
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<HttpResult> ExecuteAsync(Func<Task<HttpResult>> operation)
+    public static async Task<HttpResult> ExecuteAsync(Func<Task<HttpResult>> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -129,15 +134,18 @@ public static class TryHttpOperation
         }
         catch (TaskCanceledException e) when (e.InnerException is TimeoutException)
         {
-            return HttpResult.Failure(e.Message, HttpStatusCode.RequestTimeout);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult.Failure(message, HttpStatusCode.RequestTimeout);
         }
         catch (HttpRequestException e)
         {
-            return HttpResult.Failure(e.Message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult.Failure(message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
         }
         catch (Exception e)
         {
-            return HttpResult.Failure(e.Message, HttpStatusCode.InternalServerError);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult.Failure(message, HttpStatusCode.InternalServerError);
         }
     }
 
@@ -185,7 +193,8 @@ public static class TryHttpOperation
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<HttpResult<T>> ExecuteAsync<T>(Func<Task<T>> operation)
+    public static async Task<HttpResult<T>> ExecuteAsync<T>(Func<Task<T>> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -194,15 +203,18 @@ public static class TryHttpOperation
         }
         catch (TaskCanceledException e) when (e.InnerException is TimeoutException)
         {
-            return HttpResult<T>.Failure(e.Message, HttpStatusCode.RequestTimeout);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult<T>.Failure(message, HttpStatusCode.RequestTimeout);
         }
         catch (HttpRequestException e)
         {
-            return HttpResult<T>.Failure(e.Message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult<T>.Failure(message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
         }
         catch (Exception e)
         {
-            return HttpResult<T>.Failure(e.Message, HttpStatusCode.InternalServerError);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult<T>.Failure(message, HttpStatusCode.InternalServerError);
         }
     }
 
@@ -249,7 +261,8 @@ public static class TryHttpOperation
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<HttpResult> ExecuteAsync(Func<Task> operation)
+    public static async Task<HttpResult> ExecuteAsync(Func<Task> operation,
+        Func<Exception, string>? exceptionMapper = null)
     {
         ArgumentNullException.ThrowIfNull(operation);
         try
@@ -259,15 +272,18 @@ public static class TryHttpOperation
         }
         catch (TaskCanceledException e) when (e.InnerException is TimeoutException)
         {
-            return HttpResult.Failure(e.Message, HttpStatusCode.RequestTimeout);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult.Failure(message, HttpStatusCode.RequestTimeout);
         }
         catch (HttpRequestException e)
         {
-            return HttpResult.Failure(e.Message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult.Failure(message, e.StatusCode ?? HttpStatusCode.ServiceUnavailable);
         }
         catch (Exception e)
         {
-            return HttpResult.Failure(e.Message, HttpStatusCode.InternalServerError);
+            var message = exceptionMapper?.Invoke(e) ?? e.Message;
+            return HttpResult.Failure(message, HttpStatusCode.InternalServerError);
         }
     }
 }

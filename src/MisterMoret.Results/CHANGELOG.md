@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+- Improved XML documentation across all public types: added missing class-level summaries on `IResult`, `IResult<T>`, `Result`, `Result<T>`, `HttpResult`, and `HttpResult<T>`; added `<value>` tags on properties; cross-referenced related members by their qualified names for accurate IntelliSense navigation.
+
 ## [1.0.0-beta.4] - 2026-05-21
 
 ### Fixed

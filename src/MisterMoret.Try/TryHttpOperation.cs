@@ -49,10 +49,16 @@ public static class TryHttpOperation
     /// <param name="operation">
     /// The asynchronous delegate to invoke. Cannot be <see langword="null"/>.
     /// </param>
+    /// <param name="exceptionMapper">
+    /// An optional delegate that maps a caught <see cref="Exception"/> to a custom error message.
+    /// When <see langword="null"/>, <see cref="Exception.Message"/> is used instead.
+    /// </param>
     /// <returns>
     /// The <see cref="HttpResult{T}"/> produced by <paramref name="operation"/> when it
-    /// completes without throwing, or a failed <see cref="HttpResult{T}"/> with an error
-    /// message and HTTP status code derived from the caught exception.
+    /// completes without throwing, or a failed <see cref="HttpResult{T}"/> with an HTTP status
+    /// code derived from the caught exception and an error message produced by
+    /// <paramref name="exceptionMapper"/> when supplied, falling back to
+    /// <see cref="Exception.Message"/> otherwise.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
@@ -116,10 +122,16 @@ public static class TryHttpOperation
     /// <param name="operation">
     /// The asynchronous delegate to invoke. Cannot be <see langword="null"/>.
     /// </param>
+    /// <param name="exceptionMapper">
+    /// An optional delegate that maps a caught <see cref="Exception"/> to a custom error message.
+    /// When <see langword="null"/>, <see cref="Exception.Message"/> is used instead.
+    /// </param>
     /// <returns>
     /// The <see cref="HttpResult"/> produced by <paramref name="operation"/> when it
-    /// completes without throwing, or a failed <see cref="HttpResult"/> with an error
-    /// message and HTTP status code derived from the caught exception.
+    /// completes without throwing, or a failed <see cref="HttpResult"/> with an HTTP status
+    /// code derived from the caught exception and an error message produced by
+    /// <paramref name="exceptionMapper"/> when supplied, falling back to
+    /// <see cref="Exception.Message"/> otherwise.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
@@ -185,10 +197,16 @@ public static class TryHttpOperation
     /// <param name="operation">
     /// The asynchronous delegate to invoke. Cannot be <see langword="null"/>.
     /// </param>
+    /// <param name="exceptionMapper">
+    /// An optional delegate that maps a caught <see cref="Exception"/> to a custom error message.
+    /// When <see langword="null"/>, <see cref="Exception.Message"/> is used instead.
+    /// </param>
     /// <returns>
     /// A successful <see cref="HttpResult{T}"/> with <see cref="HttpStatusCode.OK"/> carrying
     /// the value returned by <paramref name="operation"/>, or a failed <see cref="HttpResult{T}"/>
-    /// with an error message and HTTP status code derived from the caught exception.
+    /// with an HTTP status code derived from the caught exception and an error message produced by
+    /// <paramref name="exceptionMapper"/> when supplied, falling back to
+    /// <see cref="Exception.Message"/> otherwise.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.
@@ -253,10 +271,16 @@ public static class TryHttpOperation
     /// <param name="operation">
     /// The asynchronous delegate to invoke. Cannot be <see langword="null"/>.
     /// </param>
+    /// <param name="exceptionMapper">
+    /// An optional delegate that maps a caught <see cref="Exception"/> to a custom error message.
+    /// When <see langword="null"/>, <see cref="Exception.Message"/> is used instead.
+    /// </param>
     /// <returns>
     /// A successful <see cref="HttpResult"/> with <see cref="HttpStatusCode.OK"/> when
     /// <paramref name="operation"/> completes without throwing, or a failed <see cref="HttpResult"/>
-    /// with an error message and HTTP status code derived from the caught exception.
+    /// with an HTTP status code derived from the caught exception and an error message produced by
+    /// <paramref name="exceptionMapper"/> when supplied, falling back to
+    /// <see cref="Exception.Message"/> otherwise.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="operation"/> is <see langword="null"/>.

@@ -5,9 +5,9 @@ using MisterMoret.Results;
 namespace MisterMoret.Try;
 
 /// <summary>
-/// Provides static helper methods that execute asynchronous operations inside a structured
-/// try/catch boundary and translate any thrown exception into a failed <see cref="Result"/>,
-/// preventing unhandled exceptions from escaping the call site.
+/// Provides static helper methods that execute synchronous and asynchronous operations
+/// inside a structured try/catch boundary and translate any thrown exception into a failed
+/// <see cref="Result"/>, preventing unhandled exceptions from escaping the call site.
 /// </summary>
 public static class TryOperation
 {

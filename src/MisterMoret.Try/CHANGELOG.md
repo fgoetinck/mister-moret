@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0-beta.3] - 2026-05-25
+
 ### Added
 - `TryOperation.Execute<T>(Func<Result<T>>)` — synchronous counterpart to `ExecuteAsync<T>(Func<Task<Result<T>>>)`; catches any exception and returns a failed `Result<T>` carrying the exception message.
 - `TryOperation.Execute(Func<Result>)` — synchronous counterpart to `ExecuteAsync(Func<Task<Result>>)`; catches any exception and returns a failed `Result` carrying the exception message.

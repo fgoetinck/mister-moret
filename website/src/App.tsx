@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import type { PackageId, ActiveTab } from './types/PackageEntry.ts'
 import { packages } from './data/packagesData.ts'
-import TopBar from './components/TopBar/TopBar.tsx'
 import Nav from './components/Nav/Nav.tsx'
 import Hero from './components/Hero/Hero.tsx'
 import MobilePackageTabs from './components/Hero/MobilePackageTabs.tsx'
@@ -12,14 +11,13 @@ import Footer from './components/Footer/Footer.tsx'
 import styles from './App.module.css'
 
 export default function App() {
-  const [activePkg, setActivePkg] = useState<PackageId>('result')
+  const [activePkg, setActivePkg] = useState<PackageId>('results')
   const [activeTab, setActiveTab] = useState<ActiveTab>('packages')
 
   const selectedPkg = packages.find(p => p.id === activePkg)!
 
   return (
     <>
-      <TopBar />
       <Nav activeTab={activeTab} onTabChange={setActiveTab} />
       <Hero>
         <MobilePackageTabs activePkg={activePkg} onPkgChange={setActivePkg} />

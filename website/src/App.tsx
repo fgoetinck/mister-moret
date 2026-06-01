@@ -20,7 +20,9 @@ export default function App() {
     <>
       <Nav activeTab={activeTab} onTabChange={setActiveTab} />
       <Hero>
-        <MobilePackageTabs activePkg={activePkg} onPkgChange={setActivePkg} />
+        {activeTab === 'packages' && (
+          <MobilePackageTabs activePkg={activePkg} onPkgChange={setActivePkg} />
+        )}
       </Hero>
       <div className={styles.layout}>
         {activeTab === 'packages' && (

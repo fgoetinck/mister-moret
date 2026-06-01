@@ -21,11 +21,19 @@
   margin-bottom: 8px;
 }
 
+.panelRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .panel {
   background: var(--bg2);
   border: 1px solid var(--bdr);
   border-radius: 3px;
   padding: 16px 18px;
+  flex: 1 1 calc(33.333% - 10px);
+  min-width: 200px;
 }
 
 .panelTitle {
@@ -39,4 +47,8 @@
   font-size: 12px;
   color: var(--t2);
   line-height: 1.7;
+}
+
+.text + .text {
+  margin-top: 10px;
 }

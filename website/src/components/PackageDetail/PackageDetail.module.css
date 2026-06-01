@@ -83,12 +83,30 @@
 }
 
 /* Markdown element styles */
-.readmeContainer :global(h1),
-.readmeContainer :global(h2),
-.readmeContainer :global(h3) {
+.readmeContainer :global(h1) {
+  font-size: 24px;
   color: #fff;
   font-weight: 500;
   margin: 1.2em 0 0.5em;
+}
+
+.readmeContainer :global(h2) {
+  font-size: 18px;
+  color: #fff;
+  font-weight: 500;
+  margin: 1.2em 0 0.5em;
+}
+
+.readmeContainer :global(h3) {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 500;
+  margin: 1.2em 0 0.5em;
+}
+
+@media (max-width: 767px) {
+  .readmeContainer :global(h1) { font-size: 17px; }
+  .readmeContainer :global(h2) { font-size: 14px; }
 }
 
 .readmeContainer :global(h1:first-child),

@@ -20,6 +20,10 @@
   margin-bottom: 6px;
 }
 
+@media (max-width: 767px) {
+  .title { font-size: 20px; }
+}
+
 .accent { color: var(--g); }
 
 .sub {
@@ -37,25 +41,63 @@
 @media (max-width: 767px) {
   .mobileTabs {
     display: flex;
-    gap: 0;
+    gap: 6px;
     padding: 14px 0 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
+
+  .mobileTabs::-webkit-scrollbar { display: none; }
 }
 
 .mobileTab {
-  font-size: 10px;
-  padding: 6px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 8px 12px;
   border: 1px solid var(--bdr);
-  border-radius: 2px 2px 0 0;
+  border-radius: 2px;
   color: var(--t2);
   cursor: pointer;
-  margin-right: 4px;
+  flex-shrink: 0;
   transition: color 0.15s, background 0.15s;
 }
 
 .mobileTabActive {
-  background: rgba(100, 217, 123, 0.07);
+  background: var(--g3);
   border-color: var(--g4);
-  border-bottom-color: var(--bg);
   color: var(--g);
+}
+
+.mobileTabName {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.mobileTabActive .mobileTabName { color: var(--g); }
+
+.mobileTabMeta {
+  font-size: 9px;
+  color: var(--t3);
+}
+
+.mobileTabBadge {
+  font-size: 8px;
+  padding: 1px 6px;
+  border-radius: 2px;
+  letter-spacing: 0.1em;
+}
+
+.badgeStable {
+  background: rgba(100, 217, 123, 0.12);
+  color: var(--g);
+  border: 1px solid rgba(100, 217, 123, 0.25);
+}
+
+.badgeBeta {
+  background: rgba(250, 208, 44, 0.1);
+  color: #fad02c;
+  border: 1px solid rgba(250, 208, 44, 0.22);
 }

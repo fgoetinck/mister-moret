@@ -16,7 +16,11 @@ export default function MobilePackageTabs({ activePkg, onPkgChange }: Props) {
           className={`${styles.mobileTab} ${activePkg === pkg.id ? styles.mobileTabActive : ''}`}
           onClick={() => onPkgChange(pkg.id)}
         >
-          {pkg.id.charAt(0).toUpperCase() + pkg.id.slice(1)}
+          <span className={styles.mobileTabName}>{pkg.name}</span>
+          <span className={styles.mobileTabMeta}>{pkg.version}</span>
+          <span className={`${styles.mobileTabBadge} ${pkg.badge === 'stable' ? styles.badgeStable : styles.badgeBeta}`}>
+            {pkg.badge}
+          </span>
         </button>
       ))}
     </div>

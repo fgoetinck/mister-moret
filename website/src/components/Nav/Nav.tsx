@@ -9,6 +9,10 @@ interface Props {
 export default function Nav({ activeTab, onTabChange }: Props) {
   return (
     <nav className={styles.nav}>
+      <span className={styles.brand} aria-hidden="true">
+        <span className={styles.brandMark}>&gt;MM</span>
+        <span className={styles.brandCursor}>_</span>
+      </span>
       <button
         className={`${styles.item} ${activeTab === 'packages' ? styles.active : ''}`}
         onClick={() => onTabChange('packages')}

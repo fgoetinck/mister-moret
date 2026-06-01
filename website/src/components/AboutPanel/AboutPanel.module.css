@@ -40,30 +40,3 @@
   color: var(--t2);
   line-height: 1.7;
 }
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.stat {
-  background: var(--bg2);
-  border: 1px solid var(--bdr);
-  border-radius: 3px;
-  padding: 12px 14px;
-}
-
-.statNum {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--g);
-  margin-bottom: 2px;
-}
-
-.statLbl {
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--t3);
-}

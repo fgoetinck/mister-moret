@@ -2,10 +2,10 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ['main']  # Change 'main' to your default branch if different
+    branches: ['main']
     paths:
       - 'website/**'
-  workflow_dispatch:  # Allow manual trigger
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -19,9 +19,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: website
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,17 +29,20 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
+          cache-dependency-path: website/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        working-directory: ./website
+        run: npm install
 
       - name: Build with Vite
+        working-directory: ./website
         run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./website/dist
 
   deploy:
     environment:

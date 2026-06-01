@@ -34,7 +34,7 @@
 .pkgItem:hover { background: rgba(255, 255, 255, 0.03); }
 .pkgItem.active { background: var(--g3); border-left-color: var(--g); }
 
-.pkgName { font-size: 12px; color: var(--t2); margin-bottom: 2px; }
+.pkgName { font-size: 12px; letter-spacing: 0.08em; color: var(--t2); margin-bottom: 2px; }
 .pkgItem.active .pkgName { color: var(--g); }
 .pkgVer { font-size: 9px; color: var(--t3); }
 
@@ -59,13 +59,12 @@
   border: 1px solid rgba(250, 208, 44, 0.22);
 }
 
-.divider {
-  border: none;
+.links {
+  margin-top: auto;
+  padding: 12px 16px 16px;
   border-top: 1px solid var(--bdr);
-  margin: 12px 0 0;
+  white-space: nowrap;
 }
-
-.links { padding: 12px 16px 16px; }
 
 .link {
   font-size: 10px;

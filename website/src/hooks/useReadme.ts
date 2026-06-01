@@ -15,7 +15,10 @@ export function useReadme(url: string, id: PackageId): ReadmeState {
   )
 
   useEffect(() => {
-    if (cache.has(id)) return
+    if (cache.has(id)) {
+      setState({ status: 'ok', markdown: cache.get(id)! })
+      return
+    }
     setState({ status: 'loading' })
     fetch(url)
       .then(r => r.text())

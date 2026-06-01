@@ -2,11 +2,10 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: ['main']  # Change 'main' to your default branch if different
     paths:
       - 'website/**'
-  workflow_dispatch:
+  workflow_dispatch:  # Allow manual trigger
 
 permissions:
   contents: read
@@ -15,46 +14,38 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
-    name: Build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: website
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: website/package-lock.json
+          node-version: '22'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build with Vite
         run: npm run build
 
-      - name: Upload Pages artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: website/dist
+          path: ./dist
 
   deploy:
-    name: Deploy
-    needs: build
-    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
+    runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

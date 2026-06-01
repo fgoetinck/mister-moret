@@ -13,8 +13,8 @@
   --bg2: #0e1016;
   --bg3: #1c1f26;
   --t:   rgba(255, 255, 255, 0.85);
-  --t2:  rgba(255, 255, 255, 0.40);
-  --t3:  rgba(255, 255, 255, 0.18);
+  --t2:  rgba(255, 255, 255, 0.58);
+  --t3:  rgba(255, 255, 255, 0.32);
   --bdr: rgba(255, 255, 255, 0.06);
 }
 
@@ -36,6 +36,10 @@ body {
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+  max-width: 1280px;
+  margin: 0 auto;
+  border-left: 1px solid var(--bdr);
+  border-right: 1px solid var(--bdr);
 }
 
 a {

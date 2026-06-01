@@ -59,19 +59,3 @@
   border: 1px solid rgba(250, 208, 44, 0.22);
 }
 
-.links {
-  margin-top: auto;
-  padding: 12px 16px 16px;
-  border-top: 1px solid var(--bdr);
-  white-space: nowrap;
-}
-
-.link {
-  font-size: 10px;
-  color: var(--t3);
-  display: block;
-  margin-bottom: 7px;
-  transition: color 0.15s;
-}
-
-.link:hover { color: var(--t2); }

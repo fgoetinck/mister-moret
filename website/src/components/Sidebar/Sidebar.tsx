@@ -22,17 +22,6 @@ export default function Sidebar({ activePkg, onSelect }: Props) {
           />
         ))}
       </div>
-      <div className={styles.links}>
-        <a href="https://github.com/fgoetinck/mister-moret" target="_blank" rel="noopener noreferrer" className={styles.link}>
-          ↗ github.com/fgoetinck/mister-moret
-        </a>
-        <a href="https://www.nuget.org/profiles/fgoetinck" target="_blank" rel="noopener noreferrer" className={styles.link}>
-          ↗ nuget.org/profiles/fgoetinck
-        </a>
-        <a href="https://fgoetinck.dev" target="_blank" rel="noopener noreferrer" className={styles.link}>
-          ↗ fgoetinck.dev
-        </a>
-      </div>
     </aside>
   )
 }

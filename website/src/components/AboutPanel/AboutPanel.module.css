@@ -62,3 +62,27 @@
 .text + .text {
   margin-top: 10px;
 }
+
+/* ── Links ── */
+.linkRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.linkBtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--t2);
+  border: 1px solid var(--t3);
+  padding: 8px 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.linkBtn:hover { border-color: var(--g); color: var(--g); }

@@ -1,0 +1,285 @@
+.main {
+  padding: 24px 28px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 767px) {
+  .main { padding: 16px; }
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+@media (max-width: 767px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.accent { color: var(--g); }
+
+.meta {
+  font-size: 10px;
+  color: var(--t3);
+  margin-top: 4px;
+  line-height: 1.8;
+}
+
+.ghBtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--t2);
+  border: 1px solid var(--t3);
+  padding: 8px 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.ghBtn:hover { border-color: var(--g); color: var(--g); }
+
+@media (max-width: 767px) {
+  .ghBtn { font-size: 9px; padding: 5px 10px; gap: 5px; }
+}
+
+/* ── Install block ── */
+.install {
+  background: var(--bg2);
+  border: 1px solid var(--g4);
+  border-left: 3px solid var(--g);
+  padding: 11px 16px;
+  border-radius: 0 3px 3px 0;
+  font-size: 12px;
+  color: var(--g);
+}
+
+.installPrompt { color: var(--t3); }
+
+/* ── Doc tabs ── */
+.docTabs {
+  display: flex;
+  border-bottom: 1px solid var(--bdr);
+  margin-bottom: -1px;
+}
+
+.docTab {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--t3);
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.docTab:hover { color: var(--t2); background: rgba(255,255,255,0.03); }
+
+.docTabActive {
+  color: var(--g);
+  background: var(--bg2);
+  border-color: var(--bdr);
+  border-bottom: 1px solid var(--bg2);
+  margin-bottom: -1px;
+}
+
+/* ── README / Changelog section ── */
+.readmeContainer {
+  background: var(--bg2);
+  border: 1px solid var(--bdr);
+  border-radius: 3px;
+  padding: 16px 18px;
+}
+
+/* Markdown element styles */
+.readmeContainer :global(h1) {
+  font-size: 24px;
+  color: #fff;
+  font-weight: 500;
+  margin: 1.2em 0 0.5em;
+}
+
+.readmeContainer :global(h2) {
+  font-size: 18px;
+  color: #fff;
+  font-weight: 500;
+  margin: 1.2em 0 0.5em;
+}
+
+.readmeContainer :global(h3) {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 500;
+  margin: 1.2em 0 0.5em;
+}
+
+@media (max-width: 767px) {
+  .readmeContainer :global(h1) { font-size: 17px; }
+  .readmeContainer :global(h2) { font-size: 14px; }
+}
+
+.readmeContainer :global(h1:first-child),
+.readmeContainer :global(h2:first-child),
+.readmeContainer :global(h3:first-child) {
+  margin-top: 0;
+}
+
+.readmeContainer :global(p),
+.readmeContainer :global(li) {
+  color: var(--t2);
+  line-height: 1.7;
+  font-size: 13px;
+}
+
+.readmeContainer :global(ul),
+.readmeContainer :global(ol) {
+  padding-left: 1.5em;
+  margin: 0.5em 0;
+}
+
+.readmeContainer :global(code) {
+  background: var(--bg2);
+  color: var(--g);
+  padding: 2px 5px;
+  border-radius: 2px;
+  font-size: 0.88em;
+  font-family: 'Fira Code', monospace;
+  font-variant-ligatures: contextual;
+}
+
+.readmeContainer :global(pre) {
+  background: #090c12;
+  border: 1px solid var(--bdr);
+  border-left: 3px solid var(--g4);
+  padding: 14px 18px;
+  border-radius: 0 3px 3px 0;
+  overflow-x: auto;
+  margin: 0.8em 0;
+  line-height: 1.65;
+}
+
+.readmeContainer :global(pre code) {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  color: var(--g);
+  font-size: 13px;
+  font-family: 'Fira Code', monospace;
+  font-variant-ligatures: contextual;
+}
+
+.readmeContainer :global(a) {
+  color: var(--g);
+  text-decoration: none;
+}
+
+.readmeContainer :global(a:hover) { text-decoration: underline; }
+
+.readmeContainer :global(table) {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+  margin: 0.8em 0;
+}
+
+.readmeContainer :global(th),
+.readmeContainer :global(td) {
+  border: 1px solid var(--bdr);
+  padding: 6px 10px;
+  color: var(--t2);
+  text-align: left;
+}
+
+.readmeContainer :global(th) { color: var(--t); }
+
+.readmeContainer :global(blockquote) {
+  border-left: 3px solid var(--g4);
+  padding-left: 12px;
+  color: var(--t2);
+  margin: 0.5em 0;
+}
+
+.readmeContainer :global(hr) {
+  border: none;
+  border-top: 1px solid var(--bdr);
+  margin: 1em 0;
+}
+
+/* ── Skeleton ── */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeletonH {
+  height: 11px;
+  background: rgba(100, 217, 123, 0.12);
+  border-radius: 1px;
+}
+
+.skeletonLine {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 1px;
+}
+
+.skeletonCode {
+  background: #090c12;
+  border-radius: 2px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.codeLine {
+  height: 8px;
+  background: rgba(100, 217, 123, 0.1);
+  border-radius: 1px;
+}
+
+.dim { background: rgba(255, 255, 255, 0.05); }
+
+.errorState {
+  font-size: 11px;
+  color: var(--t3);
+}
+
+/* ── Chips ── */
+.chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  font-size: 10px;
+  padding: 4px 10px;
+  border: 1px solid var(--t3);
+  border-radius: 2px;
+  color: var(--t2);
+}

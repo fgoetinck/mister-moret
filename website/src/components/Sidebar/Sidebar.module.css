@@ -1,0 +1,61 @@
+.sidebar {
+  background: var(--bg2);
+  border-right: 1px solid var(--bdr);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  .sidebar { display: none; }
+}
+
+.section { padding: 14px 0 0; }
+
+.label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--t3);
+  padding: 0 16px 8px;
+}
+
+.pkgItem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 16px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: background 0.12s;
+}
+
+.pkgItem:hover { background: rgba(255, 255, 255, 0.03); }
+.pkgItem.active { background: var(--g3); border-left-color: var(--g); }
+
+.pkgName { font-size: 12px; letter-spacing: 0.08em; color: var(--t2); margin-bottom: 2px; }
+.pkgItem.active .pkgName { color: var(--g); }
+.pkgVer { font-size: 9px; color: var(--t3); }
+
+.badge {
+  display: inline-block;
+  font-size: 8px;
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-top: 4px;
+  letter-spacing: 0.1em;
+}
+
+.stable {
+  background: rgba(100, 217, 123, 0.12);
+  color: var(--g);
+  border: 1px solid rgba(100, 217, 123, 0.25);
+}
+
+.beta {
+  background: rgba(250, 208, 44, 0.1);
+  color: #fad02c;
+  border: 1px solid rgba(250, 208, 44, 0.22);
+}
+

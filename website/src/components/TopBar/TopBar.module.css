@@ -1,0 +1,20 @@
+.topbar {
+  background: var(--bg3);
+  border-bottom: 1px solid var(--bdr);
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.brand {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  margin-left: auto;
+  user-select: none;
+}
+
+.brandMark   { color: var(--g); }
+.brandCursor { color: rgba(100, 217, 123, 0.25); }

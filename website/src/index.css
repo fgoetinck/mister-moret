@@ -1,0 +1,82 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --g:   #64d97b;
+  --g2:  rgba(100, 217, 123, 0.15);
+  --g3:  rgba(100, 217, 123, 0.07);
+  --g4:  rgba(100, 217, 123, 0.25);
+  --bg:  #111318;
+  --bg2: #0e1016;
+  --bg3: #1c1f26;
+  --t:   rgba(255, 255, 255, 0.85);
+  --t2:  rgba(255, 255, 255, 0.58);
+  --t3:  rgba(255, 255, 255, 0.32);
+  --bdr: rgba(255, 255, 255, 0.06);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg);
+  color: var(--t);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  max-width: 1280px;
+  margin: 0 auto;
+  border-left: 1px solid var(--bdr);
+  border-right: 1px solid var(--bdr);
+}
+
+/* Scrollbar — Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.12) var(--bg2);
+}
+
+/* Scrollbar — Chrome / Edge / Safari */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+  padding: 0;
+}

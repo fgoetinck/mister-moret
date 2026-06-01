@@ -1,0 +1,61 @@
+.hero {
+  padding: 24px 28px 22px;
+  border-bottom: 1px solid var(--bdr);
+  flex-shrink: 0;
+}
+
+.tag {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--g);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.accent { color: var(--g); }
+
+.sub {
+  font-size: 11px;
+  color: var(--t2);
+  line-height: 1.7;
+  max-width: 540px;
+}
+
+/* Mobile package tabs — hidden on desktop */
+.mobileTabs {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobileTabs {
+    display: flex;
+    gap: 0;
+    padding: 14px 0 0;
+  }
+}
+
+.mobileTab {
+  font-size: 10px;
+  padding: 6px 12px;
+  border: 1px solid var(--bdr);
+  border-radius: 2px 2px 0 0;
+  color: var(--t2);
+  cursor: pointer;
+  margin-right: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.mobileTabActive {
+  background: rgba(100, 217, 123, 0.07);
+  border-color: var(--g4);
+  border-bottom-color: var(--bg);
+  color: var(--g);
+}

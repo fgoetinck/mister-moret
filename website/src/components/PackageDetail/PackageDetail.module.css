@@ -20,6 +20,13 @@
   gap: 12px;
 }
 
+@media (max-width: 767px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 .title {
   font-size: 22px;
   font-weight: 700;
@@ -52,6 +59,10 @@
 }
 
 .ghBtn:hover { border-color: var(--g); color: var(--g); }
+
+@media (max-width: 767px) {
+  .ghBtn { font-size: 9px; padding: 5px 10px; gap: 5px; }
+}
 
 /* ── Install block ── */
 .install {

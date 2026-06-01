@@ -49,6 +49,16 @@
   line-height: 1.7;
 }
 
+.textFirst::before {
+  content: '> ';
+  color: var(--g);
+}
+
+.textLast::after {
+  content: ' _';
+  color: rgba(100, 217, 123, 0.25);
+}
+
 .text + .text {
   margin-top: 10px;
 }

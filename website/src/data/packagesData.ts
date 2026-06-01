@@ -11,6 +11,7 @@ export const packages: readonly PackageEntry[] = [
     githubUrl:    'https://github.com/fgoetinck/mister-moret/tree/main/src/MisterMoret.Results',
     nugetUrl:     'https://www.nuget.org/packages/MisterMoret.Results',
     readmeUrl:    'https://raw.githubusercontent.com/fgoetinck/mister-moret/main/src/MisterMoret.Results/README.md',
+    changelogUrl: 'https://raw.githubusercontent.com/fgoetinck/mister-moret/main/src/MisterMoret.Results/CHANGELOG.md',
     chips:        ['C# 12', '.NET 8 – 10', 'Result<T>', 'HttpResult', 'railway-oriented', 'zero dependencies'],
   },
   {
@@ -23,6 +24,7 @@ export const packages: readonly PackageEntry[] = [
     githubUrl:    'https://github.com/fgoetinck/mister-moret/tree/main/src/MisterMoret.Http',
     nugetUrl:     'https://www.nuget.org/packages/MisterMoret.Http',
     readmeUrl:    'https://raw.githubusercontent.com/fgoetinck/mister-moret/main/src/MisterMoret.Http/README.md',
+    changelogUrl: 'https://raw.githubusercontent.com/fgoetinck/mister-moret/main/src/MisterMoret.Http/CHANGELOG.md',
     chips:        ['C# 12', '.NET 8 – 10', 'IHttpClientFactory', 'typed responses', 'cancellation support', 'DI ready'],
   },
   {
@@ -35,6 +37,7 @@ export const packages: readonly PackageEntry[] = [
     githubUrl:    'https://github.com/fgoetinck/mister-moret/tree/main/src/MisterMoret.Try',
     nugetUrl:     'https://www.nuget.org/packages/MisterMoret.Try',
     readmeUrl:    'https://raw.githubusercontent.com/fgoetinck/mister-moret/main/src/MisterMoret.Try/README.md',
+    changelogUrl: 'https://raw.githubusercontent.com/fgoetinck/mister-moret/main/src/MisterMoret.Try/CHANGELOG.md',
     chips:        ['C# 12', '.NET 8 – 10', 'exception wrapping', 'HTTP-aware', 'zero boilerplate'],
   },
 ]

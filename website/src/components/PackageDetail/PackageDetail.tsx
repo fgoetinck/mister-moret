@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import type { PackageEntry } from '../../types/PackageEntry.ts'
-import { useReadme } from '../../hooks/useReadme.ts'
+import { useMarkdown } from '../../hooks/useMarkdown.ts'
 import ReadmeRenderer from './ReadmeRenderer.tsx'
 import styles from './PackageDetail.module.css'
 
@@ -21,10 +22,36 @@ function splitName(name: string): [string, string] {
   return [name.slice(0, lastDot + 1), name.slice(lastDot + 1)]
 }
 
+type DocTab = 'readme' | 'changelog'
+
+function DocSkeleton({ styles }: { styles: Record<string, string> }) {
+  return (
+    <div className={styles.skeleton}>
+      <div className={styles.skeletonH} style={{ width: '45%' }} />
+      <div className={styles.skeletonLine} style={{ width: '100%' }} />
+      <div className={styles.skeletonLine} style={{ width: '82%' }} />
+      <div className={styles.skeletonLine} style={{ width: '68%' }} />
+      <div className={styles.skeletonCode}>
+        <div className={styles.codeLine} style={{ width: '65%' }} />
+        <div className={`${styles.codeLine} ${styles.dim}`} style={{ width: '80%' }} />
+        <div className={styles.codeLine} style={{ width: '55%' }} />
+      </div>
+      <div className={styles.skeletonLine} style={{ width: '90%' }} />
+      <div className={styles.skeletonLine} style={{ width: '61%' }} />
+    </div>
+  )
+}
+
 export default function PackageDetail({ pkg }: Props) {
-  const readme = useReadme(pkg.readmeUrl, pkg.id)
+  const [docTab, setDocTab] = useState<DocTab>('readme')
+
+  const readme    = useMarkdown(pkg.readmeUrl,    `${pkg.id}:readme`)
+  const changelog = useMarkdown(pkg.changelogUrl, `${pkg.id}:changelog`)
+
   const [prefix, suffix] = splitName(pkg.name)
   const statusColor = pkg.badge === 'stable' ? 'var(--g)' : '#fad02c'
+
+  const activeDoc = docTab === 'readme' ? readme : changelog
 
   return (
     <main className={styles.main}>
@@ -55,28 +82,29 @@ export default function PackageDetail({ pkg }: Props) {
       </div>
 
       <div>
-        <div className={styles.blockLabel}>// readme</div>
+        <div className={styles.docTabs}>
+          <button
+            className={`${styles.docTab} ${docTab === 'readme' ? styles.docTabActive : ''}`}
+            onClick={() => setDocTab('readme')}
+          >
+            // readme
+          </button>
+          <button
+            className={`${styles.docTab} ${docTab === 'changelog' ? styles.docTabActive : ''}`}
+            onClick={() => setDocTab('changelog')}
+          >
+            // changelog
+          </button>
+        </div>
         <div className={styles.readmeContainer}>
-          {(readme.status === 'idle' || readme.status === 'loading') && (
-            <div className={styles.skeleton}>
-              <div className={styles.skeletonH} style={{ width: '45%' }} />
-              <div className={styles.skeletonLine} style={{ width: '100%' }} />
-              <div className={styles.skeletonLine} style={{ width: '82%' }} />
-              <div className={styles.skeletonLine} style={{ width: '68%' }} />
-              <div className={styles.skeletonCode}>
-                <div className={styles.codeLine} style={{ width: '65%' }} />
-                <div className={`${styles.codeLine} ${styles.dim}`} style={{ width: '80%' }} />
-                <div className={styles.codeLine} style={{ width: '55%' }} />
-              </div>
-              <div className={styles.skeletonLine} style={{ width: '90%' }} />
-              <div className={styles.skeletonLine} style={{ width: '61%' }} />
-            </div>
+          {(activeDoc.status === 'idle' || activeDoc.status === 'loading') && (
+            <DocSkeleton styles={styles} />
           )}
-          {readme.status === 'error' && (
-            <p className={styles.errorState}>Failed to load README.</p>
+          {activeDoc.status === 'error' && (
+            <p className={styles.errorState}>Failed to load {docTab}.</p>
           )}
-          {readme.status === 'ok' && (
-            <ReadmeRenderer markdown={readme.markdown} />
+          {activeDoc.status === 'ok' && (
+            <ReadmeRenderer markdown={activeDoc.markdown} />
           )}
         </div>
       </div>

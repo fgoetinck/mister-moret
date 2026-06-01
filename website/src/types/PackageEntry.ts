@@ -12,5 +12,6 @@ export interface PackageEntry {
   githubUrl: string
   nugetUrl: string
   readmeUrl: string
+  changelogUrl: string
   chips: string[]
 }

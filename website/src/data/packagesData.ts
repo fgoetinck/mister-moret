@@ -17,7 +17,7 @@ export const packages: readonly PackageEntry[] = [
   {
     id:           'http',
     name:         'MisterMoret.Http',
-    version:      'v1.0.0-beta.7',
+    version:      'v1.0.0-beta.8',
     badge:        'beta',
     dotnetTarget: '.NET 8 – 10',
     license:      'MIT',

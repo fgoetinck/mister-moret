@@ -73,7 +73,7 @@ public static class ServiceCollectionExtensions
 
         if (!string.IsNullOrWhiteSpace(authenticationScheme))
         {
-            services.TryAddScoped<IAccessTokenProvider, AccessTokenProvider>();
+            services.TryAddSingleton<IAccessTokenProvider, AccessTokenProvider>();
 
             httpClientBuilder.AddHttpMessageHandler(sp => new AuthenticationHandler(
                 sp.GetRequiredService<IAccessTokenProvider>(),
@@ -137,7 +137,7 @@ public static class ServiceCollectionExtensions
 
         if (!string.IsNullOrWhiteSpace(authenticationScheme))
         {
-            services.TryAddScoped<IAccessTokenProvider, AccessTokenProvider>();
+            services.TryAddSingleton<IAccessTokenProvider, AccessTokenProvider>();
 
             httpClientBuilder.AddHttpMessageHandler(sp => new AuthenticationHandler(
                 sp.GetRequiredService<IAccessTokenProvider>(),

@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0-beta.8] - 2026-06-03
+
+### Fixed
+- `IAccessTokenProvider` is now registered as a singleton instead of scoped. The previous scoped registration caused `AuthenticationHandler` to resolve a different instance than the one callers inject and call `SetAccessToken` on, because `IHttpClientFactory` creates its own isolated scope when building the handler pipeline — resulting in the bearer token never being injected into outgoing requests.
+
 ## [1.0.0-beta.7] - 2026-05-25
 
 ### Added

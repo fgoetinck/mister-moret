@@ -31,7 +31,7 @@ public static class ServiceCollectionExtensions
     /// When provided, registers an <see cref="AuthenticationHandler"/> that reads a token stored under
     /// <paramref name="name"/> from <see cref="IAccessTokenProvider"/> and attaches it as an
     /// <c>Authorization</c> header using this scheme (e.g. <c>"Bearer"</c>) on every outgoing request.
-    /// <see cref="IAccessTokenProvider"/> is registered as a scoped service if not already present.
+    /// <see cref="IAccessTokenProvider"/> is registered as a singleton service if not already present.
     /// </param>
     /// <returns>The original <paramref name="services"/> instance to allow call chaining.</returns>
     /// <exception cref="ArgumentNullException">
@@ -100,7 +100,7 @@ public static class ServiceCollectionExtensions
     /// When provided, registers an <see cref="AuthenticationHandler"/> that reads the global default token from
     /// <see cref="IAccessTokenProvider"/> and attaches it as an <c>Authorization</c> header using this scheme
     /// (e.g. <c>"Bearer"</c>) on every outgoing request. <see cref="IAccessTokenProvider"/> is registered as a
-    /// scoped service if not already present.
+    /// singleton service if not already present.
     /// </param>
     /// <returns>The original <paramref name="services"/> instance to allow call chaining.</returns>
     /// <exception cref="ArgumentNullException">

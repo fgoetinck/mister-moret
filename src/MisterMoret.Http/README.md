@@ -30,7 +30,7 @@ A simple and extensible **API client wrapper** for .NET, built on top of `IHttpC
 Install the package via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Http --version 1.0.0-beta.9
+dotnet add package MisterMoret.Http --version 1.0.0-beta.10
 ```
 
 ## 💡 Usage
@@ -102,24 +102,82 @@ var client = apiClientFactory.CreateClient();
 
 ### 3. POST/PUT with JSON
 
+Use the two-type-parameter overloads when the server returns a response body you want to deserialize:
+
 ```csharp
 var newUser = new User { Name = "John Doe" };
-var result = await client.PostAsync<User, User>("users", newUser);
+HttpResult<User> result = await client.PostAsync<User, User>("users", newUser);
 
 if (result.IsSuccess)
 {
-    // Created successfully
+    var created = result.Value;
 }
 ```
 
-### 4. GET with Query Parameters
+Use the single-type-parameter overloads when no response body is expected:
+
+```csharp
+var updated = new User { Name = "Jane Doe" };
+
+// POST — returns HttpResult (no response body)
+HttpResult postResult = await client.PostAsync<User>("users/1/deactivate", updated);
+
+// PUT — returns HttpResult (no response body)
+HttpResult putResult = await client.PutAsync<User>("users/1", updated);
+
+if (postResult.IsSuccess)
+{
+    // Accepted, nothing to deserialize
+}
+```
+
+### 4. PATCH
+
+Use the two-type-parameter overload when the server returns a response body:
+
+```csharp
+var patch = new UserPatch { Name = "Jane Doe" };
+HttpResult<User> result = await client.PatchAsync<UserPatch, User>("users/1", patch);
+
+if (result.IsSuccess)
+{
+    var patched = result.Value;
+}
+```
+
+Use the single-type-parameter overload when no response body is expected:
+
+```csharp
+HttpResult result = await client.PatchAsync<UserPatch>("users/1", patch);
+
+if (result.IsSuccess)
+{
+    // Accepted, nothing to deserialize
+}
+```
+
+### 5. POST with Raw Content
+
+Use the `HttpContent` overload to post non-JSON content, such as a multipart form upload:
+
+```csharp
+using var stream = File.OpenRead("photo.jpg");
+using var multipart = new MultipartFormDataContent();
+multipart.Add(new StreamContent(stream), "file", "photo.jpg");
+
+var result = await client.PostAsync<UploadResponse>("users/1/photo", multipart);
+```
+
+The part name passed to `Add` (here `"file"`) must match the `IFormFile` parameter name on the receiving server action.
+
+### 6. GET with Query Parameters
 
 ```csharp
 var query = new { Search = "Frédéric", Page = 1 };
 var result = await client.GetAsync<List<User>, object>("users", query);
 ```
 
-### 5. Authentication
+### 7. Authentication
 
 Pass an authentication scheme when registering a client to enable bearer token injection:
 

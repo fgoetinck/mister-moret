@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0-beta.9] - 2026-06-03
+
+### Fixed
+- `AccessTokenProvider` now uses `ConcurrentDictionary` instead of `Dictionary` for named token storage, making concurrent reads and writes from multiple threads safe.
+- The global default token field is now `volatile`, ensuring all threads always observe the latest written value.
+
+### Changed
+- Package README updated to document that the built-in `AccessTokenProvider` is designed for global/machine tokens (client credentials, API keys, desktop/mobile apps) and is not suitable for per-user web scenarios. A custom `IAccessTokenProvider` pattern is now documented for MVC and Blazor.
+
 ## [1.0.0-beta.8] - 2026-06-03
 
 ### Fixed

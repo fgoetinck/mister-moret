@@ -20,7 +20,7 @@ A simple and extensible **API client wrapper** for .NET, built on top of `IHttpC
 - **Result Pattern Integration**: Returns `HttpResult<T>` instead of throwing exceptions for non-success status codes. When the server returns a structured `HttpResult` error body, its errors are surfaced directly; otherwise a generic failure is returned.
 - **Query Parameter Support**: Simplified way to pass query parameters via anonymous objects or classes.
 - **Cancellation Support**: Every HTTP verb method accepts an optional `CancellationToken` as its last parameter.
-- **Authentication Support**: Built-in bearer token injection via `IAccessTokenProvider`, with per-client or global token management.
+- **Authentication Support**: Built-in bearer token injection via `IAccessTokenProvider`, designed for global/machine tokens (e.g. client credentials, API keys). Extensible for per-user scenarios via a custom `IAccessTokenProvider`.
 - **Configurable Options**: Control base address, timeout, and user-agent through `ApiClientOptions`.
 - **Dependency Injection Ready**: Seamlessly integrates with `IServiceCollection`.
 - **Modern .NET Support**: Targets **.NET 8.0, 9.0, and 10.0**.
@@ -30,7 +30,7 @@ A simple and extensible **API client wrapper** for .NET, built on top of `IHttpC
 Install the package via the NuGet CLI:
 
 ```bash
-dotnet add package MisterMoret.Http --version 1.0.0-beta.7
+dotnet add package MisterMoret.Http --version 1.0.0-beta.9
 ```
 
 ## 💡 Usage
@@ -130,7 +130,7 @@ builder.Services.AddApiClient("MyService", options =>
 }, "Bearer");
 ```
 
-This registers `IAccessTokenProvider` as a scoped service. Inject it wherever you obtain a token (e.g. after login) and store it for the client:
+This registers `IAccessTokenProvider` as a singleton service. Inject it wherever you obtain a token and store it for the client:
 
 ```csharp
 using MisterMoret.Http.Authentication;
@@ -146,7 +146,7 @@ public class AuthService
 
     public void StoreToken(string token)
     {
-        // Scoped to a specific named client
+        // For a specific named client
         _tokenProvider.SetAccessToken("MyService", token);
 
         // Or globally, for clients registered without a name
@@ -156,6 +156,57 @@ public class AuthService
 ```
 
 The `AuthenticationHandler` automatically reads the token and attaches it as an `Authorization` header on every outgoing request for that client.
+
+#### Built-in `AccessTokenProvider` — intended use cases
+
+The built-in `AccessTokenProvider` stores **one token per named client** (plus one global token for the default client) for the lifetime of the application. This makes it suitable for:
+
+- **Machine-to-machine authentication** — a single shared token for all requests (e.g. client credentials OAuth flow, API key)
+- **Desktop / mobile apps** (e.g. MAUI) — one logged-in user for the entire app session
+- **Background services / workers** — a service account token set once at startup or refreshed by a background task
+
+#### Per-user scenarios (MVC, Blazor) — use a custom `IAccessTokenProvider`
+
+The built-in implementation is **not suitable** for web apps where each user has their own token. Because it is a singleton with a single token per client, tokens from concurrent requests would overwrite each other, causing users to send each other's tokens.
+
+For per-user scenarios, implement `IAccessTokenProvider` to read the token from the current HTTP context and register it **before** calling `AddApiClient` (so `TryAddSingleton` skips the built-in one):
+
+```csharp
+// In MVC — reads the access token stored in the authentication cookie
+public class UserAccessTokenProvider : IAccessTokenProvider
+{
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public UserAccessTokenProvider(IHttpContextAccessor httpContextAccessor)
+    {
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    public string? GetAccessToken() =>
+        _httpContextAccessor.HttpContext?
+            .GetTokenAsync("access_token")
+            .GetAwaiter().GetResult();
+
+    public string? GetAccessToken(string clientName) => GetAccessToken();
+
+    public void SetAccessToken(string accessToken) { }
+    public void SetAccessToken(string clientName, string accessToken) { }
+}
+```
+
+```csharp
+// Register before AddApiClient so TryAddSingleton skips the built-in implementation
+builder.Services.AddSingleton<IAccessTokenProvider, UserAccessTokenProvider>();
+builder.Services.AddApiClient("MyService", options =>
+{
+    options.BaseAddress = "https://api.example.com/v1/";
+}, "Bearer");
+```
+
+> [!NOTE]
+> In **Blazor Server**, `IHttpContextAccessor` is unreliable inside components after the initial HTTP handshake (the connection switches to SignalR). Capture the token during the initial request and store it in a scoped service instead.
+>
+> In **Blazor WebAssembly**, there is no server-side HTTP context. Tokens are managed in the browser and typically obtained via `IAccessTokenProvider` from `Microsoft.AspNetCore.Components.WebAssembly.Authentication`, which you can wrap.
 
 ## ⚖️ License
 

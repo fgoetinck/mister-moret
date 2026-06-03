@@ -1,11 +1,15 @@
-import type { PackageEntry } from '../types/PackageEntry.ts'
+import type { BadgeKind, PackageEntry } from '../types/PackageEntry.ts'
+
+function badge(version: string): BadgeKind {
+  return version.includes('-') ? 'beta' : 'stable'
+}
 
 export const packages: readonly PackageEntry[] = [
   {
     id:           'results',
     name:         'MisterMoret.Results',
-    version:      'v1.0.0-beta.5',
-    badge:        'beta',
+    version:      `v${__VERSIONS__.results}`,
+    badge:        badge(__VERSIONS__.results),
     dotnetTarget: '.NET 8 – 10',
     license:      'MIT',
     githubUrl:    'https://github.com/fgoetinck/mister-moret/tree/main/src/MisterMoret.Results',
@@ -17,8 +21,8 @@ export const packages: readonly PackageEntry[] = [
   {
     id:           'http',
     name:         'MisterMoret.Http',
-    version:      'v1.0.0-beta.8',
-    badge:        'beta',
+    version:      `v${__VERSIONS__.http}`,
+    badge:        badge(__VERSIONS__.http),
     dotnetTarget: '.NET 8 – 10',
     license:      'MIT',
     githubUrl:    'https://github.com/fgoetinck/mister-moret/tree/main/src/MisterMoret.Http',
@@ -30,8 +34,8 @@ export const packages: readonly PackageEntry[] = [
   {
     id:           'try',
     name:         'MisterMoret.Try',
-    version:      'v1.0.0-beta.3',
-    badge:        'beta',
+    version:      `v${__VERSIONS__.try}`,
+    badge:        badge(__VERSIONS__.try),
     dotnetTarget: '.NET 8 – 10',
     license:      'MIT',
     githubUrl:    'https://github.com/fgoetinck/mister-moret/tree/main/src/MisterMoret.Try',

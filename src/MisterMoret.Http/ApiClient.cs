@@ -63,6 +63,13 @@ public sealed class ApiClient : IApiClient
         using var response = await _httpClient.PostAsJsonAsync(url, request, cancellationToken);
         return await HandleHttpResponse<TResponse>(response, CreateErrorMessage, cancellationToken);
     }
+    
+    public async Task<HttpResult<TResponse>> PostAsync<TResponse>(string endpoint, HttpContent content, CancellationToken cancellationToken = default)
+    {
+        string url = CreateRelativeEndpoint(endpoint);
+        using var response = await _httpClient.PostAsync(url, content, cancellationToken);
+        return await HandleHttpResponse<TResponse>(response, CreateErrorMessage, cancellationToken);
+    }
 
     /// <inheritdoc/>
     public async Task<HttpResult<TResponse>> PutAsync<TRequest, TResponse>(string endpoint, TRequest request, CancellationToken cancellationToken = default)

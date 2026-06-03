@@ -1,3 +1,4 @@
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using MisterMoret.Results;
@@ -64,6 +65,9 @@ public interface IApiClient
     /// </returns>
     Task<HttpResult<TResponse>> PostAsync<TRequest, TResponse>(string endpoint, TRequest request, CancellationToken cancellationToken = default);
 
+    Task<HttpResult<TResponse>> PostAsync<TResponse>(string endpoint, HttpContent content,
+        CancellationToken cancellationToken = default);
+    
     /// <summary>
     /// Sends a PUT request with <paramref name="request"/> serialized as a JSON body to the specified endpoint
     /// and deserializes a successful response body into <typeparamref name="TResponse"/>.

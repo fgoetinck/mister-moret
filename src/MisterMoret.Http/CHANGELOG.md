@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0-beta.10] - 2026-06-03
+
 ### Added
 - `PostAsync<TResponse>(string endpoint, HttpContent content, CancellationToken)` overload on `IApiClient` / `ApiClient` for posting arbitrary HTTP content (e.g. `MultipartFormDataContent` for file uploads).
 - `PostAsync<TRequest>(string endpoint, TRequest request, CancellationToken)` overload on `IApiClient` / `ApiClient` — POST with a JSON body when no response body is expected, returning `HttpResult`.

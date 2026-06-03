@@ -63,6 +63,23 @@ public sealed class ApiClient : IApiClient
         using var response = await _httpClient.PostAsJsonAsync(url, request, cancellationToken);
         return await HandleHttpResponse<TResponse>(response, CreateErrorMessage, cancellationToken);
     }
+    
+    /// <inheritdoc/>
+    public async Task<HttpResult<TResponse>> PostAsync<TResponse>(string endpoint, HttpContent content, CancellationToken cancellationToken = default)
+    {
+        string url = CreateRelativeEndpoint(endpoint);
+        using var response = await _httpClient.PostAsync(url, content, cancellationToken);
+        return await HandleHttpResponse<TResponse>(response, CreateErrorMessage, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public async Task<HttpResult> PostAsync<TRequest>(string endpoint, TRequest request, CancellationToken cancellationToken = default)
+    {
+        string url = CreateRelativeEndpoint(endpoint);
+        using var response = await _httpClient.PostAsJsonAsync(url, request, cancellationToken);
+        if (!response.IsSuccessStatusCode) return HttpResult.Failure(CreateErrorMessage, response.StatusCode);
+        return HttpResult.Success();
+    }
 
     /// <inheritdoc/>
     public async Task<HttpResult<TResponse>> PutAsync<TRequest, TResponse>(string endpoint, TRequest request, CancellationToken cancellationToken = default)
@@ -70,6 +87,32 @@ public sealed class ApiClient : IApiClient
         string url = CreateRelativeEndpoint(endpoint);
         using var response = await _httpClient.PutAsJsonAsync(url, request, cancellationToken);
         return await HandleHttpResponse<TResponse>(response, UpdateErrorMessage, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public async Task<HttpResult> PutAsync<TRequest>(string endpoint, TRequest request, CancellationToken cancellationToken = default)
+    {
+        string url = CreateRelativeEndpoint(endpoint);
+        using var response = await _httpClient.PutAsJsonAsync(url, request, cancellationToken);
+        if (!response.IsSuccessStatusCode) return HttpResult.Failure(UpdateErrorMessage, response.StatusCode);
+        return HttpResult.Success();
+    }
+
+    /// <inheritdoc/>
+    public async Task<HttpResult<TResponse>> PatchAsync<TRequest, TResponse>(string endpoint, TRequest request, CancellationToken cancellationToken = default)
+    {
+        string url = CreateRelativeEndpoint(endpoint);
+        using var response = await _httpClient.PatchAsJsonAsync(url, request, cancellationToken);
+        return await HandleHttpResponse<TResponse>(response, UpdateErrorMessage, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public async Task<HttpResult> PatchAsync<TRequest>(string endpoint, TRequest request, CancellationToken cancellationToken = default)
+    {
+        string url = CreateRelativeEndpoint(endpoint);
+        using var response = await _httpClient.PatchAsJsonAsync(url, request, cancellationToken);
+        if (!response.IsSuccessStatusCode) return HttpResult.Failure(UpdateErrorMessage, response.StatusCode);
+        return HttpResult.Success();
     }
 
     /// <inheritdoc/>

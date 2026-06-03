@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- `PostAsync<TResponse>(string endpoint, HttpContent content, CancellationToken)` overload on `IApiClient` / `ApiClient` for posting arbitrary HTTP content (e.g. `MultipartFormDataContent` for file uploads).
+
 ## [1.0.0-beta.9] - 2026-06-03
 
 ### Fixed

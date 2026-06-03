@@ -64,6 +64,7 @@ public sealed class ApiClient : IApiClient
         return await HandleHttpResponse<TResponse>(response, CreateErrorMessage, cancellationToken);
     }
     
+    /// <inheritdoc/>
     public async Task<HttpResult<TResponse>> PostAsync<TResponse>(string endpoint, HttpContent content, CancellationToken cancellationToken = default)
     {
         string url = CreateRelativeEndpoint(endpoint);

@@ -112,14 +112,28 @@ if (result.IsSuccess)
 }
 ```
 
-### 4. GET with Query Parameters
+### 4. POST with Raw Content
+
+Use the `HttpContent` overload to post non-JSON content, such as a multipart form upload:
+
+```csharp
+using var stream = File.OpenRead("photo.jpg");
+using var multipart = new MultipartFormDataContent();
+multipart.Add(new StreamContent(stream), "file", "photo.jpg");
+
+var result = await client.PostAsync<UploadResponse>("users/1/photo", multipart);
+```
+
+The part name passed to `Add` (here `"file"`) must match the `IFormFile` parameter name on the receiving server action.
+
+### 5. GET with Query Parameters
 
 ```csharp
 var query = new { Search = "Frédéric", Page = 1 };
 var result = await client.GetAsync<List<User>, object>("users", query);
 ```
 
-### 5. Authentication
+### 6. Authentication
 
 Pass an authentication scheme when registering a client to enable bearer token injection:
 

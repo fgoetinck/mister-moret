@@ -24,11 +24,13 @@ namespace MisterMoret.Http;
 /// is preserved on non-success results. When a success response body cannot be deserialized (empty, invalid JSON, non-JSON
 /// content type or unsupported charset) the result is a failure with the message "Failed to deserialize data." and status
 /// code 500, so a failed result never carries a 2xx code. Transport failures are also mapped to failed results instead
-/// of being thrown: an <see cref="HttpRequestException"/> yields its <see cref="HttpRequestException.StatusCode"/> or 503
-/// (Service Unavailable) when it has none, with the messages "Failed to reach the server." and the exception message; a timeout
-/// yields 504 (Gateway Timeout) with the messages "The request timed out." and the exception message. Cancellation requested
-/// through the caller's <see cref="CancellationToken"/> still throws <see cref="OperationCanceledException"/>. Other exceptions,
-/// such as a <see cref="NotSupportedException"/> for an unsupported <c>TResponse</c>, are not caught.
+/// of being thrown, with fixed messages that never include the exception message. An <see cref="HttpRequestException"/>
+/// yields its <see cref="HttpRequestException.StatusCode"/> when set; otherwise 503 (Service Unavailable) for connection,
+/// name resolution, premature response end and unknown errors, and 502 (Bad Gateway) for every other
+/// <see cref="HttpRequestException.HttpRequestError"/>, with the message "Failed to reach the server.". An HttpClient timeout
+/// yields 408 (Request Timeout) with the message "The request timed out.". Cancellation requested through the caller's
+/// <see cref="CancellationToken"/> still throws <see cref="OperationCanceledException"/>, as does any other cancellation.
+/// Other exceptions, such as a <see cref="NotSupportedException"/> for an unsupported <c>TResponse</c>, are not caught.
 /// Instances are created exclusively by <see cref="ApiClientFactory"/> and cannot be subclassed.
 /// </remarks>
 public sealed class ApiClient : IApiClient
@@ -179,20 +181,15 @@ public sealed class ApiClient : IApiClient
         }, cancellationToken);
     }
 
-    // A timeout surfaces as an OperationCanceledException that the caller did not request.
     private static async Task<HttpResult<TResponse>> SendAsync<TResponse>(Func<Task<HttpResult<TResponse>>> operation, CancellationToken cancellationToken)
     {
         try
         {
             return await operation();
         }
-        catch (HttpRequestException ex)
+        catch (Exception ex) when (TryMapTransportFailure(ex, cancellationToken, out string error, out HttpStatusCode statusCode))
         {
-            return HttpResult<TResponse>.Failure([UnreachableErrorMessage, ex.Message], ex.StatusCode ?? HttpStatusCode.ServiceUnavailable);
-        }
-        catch (OperationCanceledException ex) when (!cancellationToken.IsCancellationRequested)
-        {
-            return HttpResult<TResponse>.Failure([TimeoutErrorMessage, ex.Message], HttpStatusCode.GatewayTimeout);
+            return HttpResult<TResponse>.Failure(error, statusCode);
         }
     }
 
@@ -202,13 +199,35 @@ public sealed class ApiClient : IApiClient
         {
             return await operation();
         }
-        catch (HttpRequestException ex)
+        catch (Exception ex) when (TryMapTransportFailure(ex, cancellationToken, out string error, out HttpStatusCode statusCode))
         {
-            return HttpResult.Failure([UnreachableErrorMessage, ex.Message], ex.StatusCode ?? HttpStatusCode.ServiceUnavailable);
+            return HttpResult.Failure(error, statusCode);
         }
-        catch (OperationCanceledException ex) when (!cancellationToken.IsCancellationRequested)
+    }
+
+    // Fixed messages only: exception messages can leak host, IP or port. An HttpClient timeout is a TaskCanceledException
+    // wrapping a TimeoutException; any other cancellation (e.g. from a handler's own token) must propagate untouched.
+    private static bool TryMapTransportFailure(Exception ex, CancellationToken cancellationToken, out string error, out HttpStatusCode statusCode)
+    {
+        switch (ex)
         {
-            return HttpResult.Failure([TimeoutErrorMessage, ex.Message], HttpStatusCode.GatewayTimeout);
+            case TaskCanceledException { InnerException: TimeoutException } when !cancellationToken.IsCancellationRequested:
+                error = TimeoutErrorMessage;
+                statusCode = HttpStatusCode.RequestTimeout;
+                return true;
+            case HttpRequestException httpEx:
+                error = UnreachableErrorMessage;
+                statusCode = httpEx.StatusCode ?? httpEx.HttpRequestError switch
+                {
+                    HttpRequestError.ConnectionError or HttpRequestError.NameResolutionError
+                        or HttpRequestError.ResponseEnded or HttpRequestError.Unknown => HttpStatusCode.ServiceUnavailable,
+                    _ => HttpStatusCode.BadGateway
+                };
+                return true;
+            default:
+                error = string.Empty;
+                statusCode = default;
+                return false;
         }
     }
 

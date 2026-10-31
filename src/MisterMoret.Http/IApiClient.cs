@@ -11,12 +11,16 @@ namespace MisterMoret.Http;
 /// that captures both the HTTP status code and the success or failure outcome of the request.
 /// </summary>
 /// <remarks>
-/// Transport failures are mapped to failed results instead of being thrown: an <see cref="HttpRequestException"/>
-/// (refused connection, unresolvable host, no network, dropped connection) yields its
-/// <see cref="HttpRequestException.StatusCode"/> or 503 (Service Unavailable) when it has none, with the messages
-/// "Failed to reach the server." and the exception message; a timeout yields 504 (Gateway Timeout) with the messages
-/// "The request timed out." and the exception message. Cancellation requested through the caller's
-/// <see cref="CancellationToken"/> still throws <see cref="OperationCanceledException"/>. Other exceptions are not caught.
+/// Transport failures are mapped to failed results instead of being thrown. An <see cref="HttpRequestException"/>
+/// yields a failed result with its <see cref="HttpRequestException.StatusCode"/> when it has one. Otherwise the status
+/// code is 503 (Service Unavailable) for connection, name-resolution, premature-response-end and unknown errors, and
+/// 502 (Bad Gateway) for every other <see cref="HttpRequestError"/> (for example TLS/certificate errors and invalid
+/// responses). The error message is always "Failed to reach the server."; the exception message is deliberately not
+/// included, so no host, IP address or port leaks to the caller. A timeout of the underlying <see cref="HttpClient"/>
+/// (a <see cref="TaskCanceledException"/> with an inner <see cref="TimeoutException"/> while the caller's token is not
+/// cancelled) yields 408 (Request Timeout) with the message "The request timed out.". Cancellation requested through
+/// the caller's <see cref="CancellationToken"/> still throws <see cref="OperationCanceledException"/>, and any other
+/// cancellation or exception is not caught.
 /// </remarks>
 public interface IApiClient
 {

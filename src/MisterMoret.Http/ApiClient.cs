@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,10 +17,14 @@ namespace MisterMoret.Http;
 /// HTTP responses to <see cref="HttpResult{T}"/> or <see cref="HttpResult"/> values.
 /// </summary>
 /// <remarks>
-/// On a non-success HTTP response, each method attempts to deserialize the response body into an internal
-/// <c>ApiErrorResponse</c> record and extract its <c>errors</c> array. When one or more errors are present they are
-/// forwarded directly to the returned <see cref="HttpResult{T}"/> failure. When the array is absent or empty, a
-/// generic fallback error message is used instead. In both cases the HTTP status code is preserved on the result.
+/// On a non-success HTTP response, each method attempts to read the <c>errors</c> member of a JSON response body, either
+/// an array of strings or the ASP.NET Core <c>ValidationProblemDetails</c> form (an object of string arrays, flattened into
+/// one list). When one or more errors are present they are forwarded to the returned <see cref="HttpResult{T}"/> failure.
+/// Otherwise (no errors, or an empty, malformed or non-JSON body) a generic fallback message is used. The HTTP status code
+/// is preserved on non-success results. When a success response body cannot be deserialized (empty, invalid JSON, non-JSON
+/// content type or unsupported charset) the result is a failure with the message "Failed to deserialize data." and status
+/// code 500, so a failed result never carries a 2xx code. Other exceptions, such as a <see cref="NotSupportedException"/>
+/// for an unsupported <c>TResponse</c>, are not caught.
 /// Instances are created exclusively by <see cref="ApiClientFactory"/> and cannot be subclassed.
 /// </remarks>
 public sealed class ApiClient : IApiClient
@@ -133,24 +140,109 @@ public sealed class ApiClient : IApiClient
         return HttpResult.Success();
     }
 
-    private sealed record ApiErrorResponse(List<string>? Errors);
+    private sealed record ApiErrorResponse(JsonElement? Errors);
 
     private static async Task<HttpResult<TResponse>> HandleHttpResponse<TResponse>(HttpResponseMessage response,
         string errorMessage, CancellationToken cancellationToken)
     {
+        bool readable = IsReadableJson(response.Content);
+
         if (!response.IsSuccessStatusCode)
         {
-            var apiError = await response.Content.ReadFromJsonAsync<ApiErrorResponse>(JsonSerializerOptions, cancellationToken);
-            if (apiError?.Errors?.Count > 0)
-                return HttpResult<TResponse>.Failure(apiError.Errors, response.StatusCode);
+            ApiErrorResponse? apiError = null;
+            if (readable)
+            {
+                try
+                {
+                    apiError = await response.Content.ReadFromJsonAsync<ApiErrorResponse>(JsonSerializerOptions, cancellationToken);
+                }
+                catch (JsonException)
+                {
+                }
+            }
+
+            var errors = ExtractErrors(apiError?.Errors);
+            if (errors.Count > 0)
+                return HttpResult<TResponse>.Failure(errors, response.StatusCode);
 
             return HttpResult<TResponse>.Failure(errorMessage, response.StatusCode);
         }
 
-        var data = await response.Content.ReadFromJsonAsync<TResponse>(JsonSerializerOptions, cancellationToken);
-        if (data == null) return HttpResult<TResponse>.Failure(JsonDeserializationErrorMessage, response.StatusCode);
+        if (!readable)
+            return HttpResult<TResponse>.Failure(JsonDeserializationErrorMessage, HttpStatusCode.InternalServerError);
+
+        TResponse? data;
+        try
+        {
+            data = await response.Content.ReadFromJsonAsync<TResponse>(JsonSerializerOptions, cancellationToken);
+        }
+        catch (JsonException ex)
+        {
+            return HttpResult<TResponse>.Failure([JsonDeserializationErrorMessage, ex.Message], HttpStatusCode.InternalServerError);
+        }
+
+        if (data == null)
+            return HttpResult<TResponse>.Failure(JsonDeserializationErrorMessage, HttpStatusCode.InternalServerError);
 
         return HttpResult<TResponse>.Success(data);
+    }
+
+    // ReadFromJsonAsync throws for empty bodies, non-JSON types and unknown charsets, so check first.
+    private static bool IsReadableJson(HttpContent content)
+    {
+        if (content.Headers.ContentLength == 0) return false;
+
+        var contentType = content.Headers.ContentType;
+        string? mediaType = contentType?.MediaType;
+        if (mediaType == null) return false;
+        if (!mediaType.Equals("application/json", StringComparison.OrdinalIgnoreCase) &&
+            !mediaType.EndsWith("+json", StringComparison.OrdinalIgnoreCase)) return false;
+
+        string? charset = contentType!.CharSet;
+        if (string.IsNullOrEmpty(charset)) return true;
+        if (charset.Length > 2 && charset[0] == '"' && charset[^1] == '"') charset = charset[1..^1];
+        try
+        {
+            _ = Encoding.GetEncoding(charset);
+            return true;
+        }
+        catch (ArgumentException)
+        {
+            return false;
+        }
+    }
+
+    // Accepts "errors": ["..."] and the ValidationProblemDetails form "errors": {"Field": ["..."]}.
+    private static List<string> ExtractErrors(JsonElement? element)
+    {
+        var errors = new List<string>();
+        if (element is not { } value) return errors;
+
+        switch (value.ValueKind)
+        {
+            case JsonValueKind.Array:
+                AddStrings(value, errors);
+                break;
+            case JsonValueKind.Object:
+                foreach (var property in value.EnumerateObject())
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Array) AddStrings(property.Value, errors);
+                    else if (property.Value.ValueKind == JsonValueKind.String) AddString(property.Value, errors);
+                }
+                break;
+        }
+
+        return errors;
+    }
+
+    private static void AddStrings(JsonElement array, List<string> errors)
+    {
+        foreach (var item in array.EnumerateArray()) AddString(item, errors);
+    }
+
+    private static void AddString(JsonElement item, List<string> errors)
+    {
+        if (item.ValueKind == JsonValueKind.String && item.GetString() is { Length: > 0 } text) errors.Add(text);
     }
 
     private string CreateRelativeEndpoint(string endpoint)

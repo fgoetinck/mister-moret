@@ -7,7 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Fixed
-- `ApiClient` no longer throws `JsonException` or `NotSupportedException` on empty, invalid JSON or non-JSON content-type (e.g. `text/html`) response bodies. A non-success response returns a failed `HttpResult<T>` with the status code and the fallback error message; a success response returns the "Failed to deserialize data." failure.
+- `ApiClient` no longer throws on empty, malformed or non-JSON (e.g. `text/html`) response bodies, or on a JSON content type with an unsupported charset. A non-success response returns a failed `HttpResult<T>` with the status code and the fallback error message. A success response whose body cannot be deserialized returns a failure with status code 500 and the message "Failed to deserialize data." (plus the JSON error message when there is one), never a 2xx code.
+- `ApiClient` now surfaces the `errors` of ASP.NET Core `ValidationProblemDetails` responses (an object of string arrays) in addition to the array form.
 
 ## [1.0.0-beta.10] - 2026-06-03
 

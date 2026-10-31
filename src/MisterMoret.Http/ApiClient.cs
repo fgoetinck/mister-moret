@@ -198,10 +198,12 @@ public sealed class ApiClient : IApiClient
         if (!mediaType.Equals("application/json", StringComparison.OrdinalIgnoreCase) &&
             !mediaType.EndsWith("+json", StringComparison.OrdinalIgnoreCase)) return false;
 
-        if (string.IsNullOrEmpty(contentType!.CharSet)) return true;
+        string? charset = contentType!.CharSet;
+        if (string.IsNullOrEmpty(charset)) return true;
+        if (charset.Length > 2 && charset[0] == '"' && charset[^1] == '"') charset = charset[1..^1];
         try
         {
-            _ = Encoding.GetEncoding(contentType.CharSet);
+            _ = Encoding.GetEncoding(charset);
             return true;
         }
         catch (ArgumentException)

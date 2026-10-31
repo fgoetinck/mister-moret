@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+- `ApiClient` no longer throws `HttpRequestException` or a timeout (`TaskCanceledException`) for transport failures. It returns a failed result with status code 503 (or the exception's `StatusCode`) and 504 respectively, with the error message "Failed to reach the server." or "The request timed out." plus the exception message. Cancellation requested through the caller's `CancellationToken` still throws `OperationCanceledException`. Callers that caught these exceptions must now check `IsSuccess` / `StatusCode`.
+
 ## [1.0.0-beta.11] - 2026-10-31
 
 ### Fixed

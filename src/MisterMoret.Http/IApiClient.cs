@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,14 @@ namespace MisterMoret.Http;
 /// Defines HTTP verb operations for a configured API endpoint, each returning a typed <see cref="HttpResult{T}"/>
 /// that captures both the HTTP status code and the success or failure outcome of the request.
 /// </summary>
+/// <remarks>
+/// Transport failures are mapped to failed results instead of being thrown: an <see cref="HttpRequestException"/>
+/// (refused connection, unresolvable host, no network, dropped connection) yields its
+/// <see cref="HttpRequestException.StatusCode"/> or 503 (Service Unavailable) when it has none, with the messages
+/// "Failed to reach the server." and the exception message; a timeout yields 504 (Gateway Timeout) with the messages
+/// "The request timed out." and the exception message. Cancellation requested through the caller's
+/// <see cref="CancellationToken"/> still throws <see cref="OperationCanceledException"/>. Other exceptions are not caught.
+/// </remarks>
 public interface IApiClient
 {
     /// <summary>

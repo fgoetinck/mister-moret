@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0-beta.12] - 2026-10-31
+
+### Changed
+- `ApiClient` no longer throws `HttpRequestException` or a timeout (`TaskCanceledException`) for transport failures; it returns a failed result instead. An `HttpRequestException` yields its `StatusCode` when set, otherwise 503 (Service Unavailable) for connection, name-resolution, premature-response-end and unknown errors and 502 (Bad Gateway) for every other `HttpRequestError` (e.g. TLS/certificate errors, invalid responses), with the message "Failed to reach the server." only (the exception message is not included, so no host, IP or port leaks). An `HttpClient` timeout yields 408 (Request Timeout) with the message "The request timed out.". Cancellation requested through the caller's `CancellationToken` still throws `OperationCanceledException`, and other exceptions still propagate. Callers that caught `HttpRequestException` / `TaskCanceledException` must now check `IsSuccess` / `StatusCode`. Code that wraps `ApiClient` calls in `MisterMoret.Try`'s `TryHttpOperation` now gets the `ApiClient` status codes (and failed results) instead of the operation's exception mapper being applied to transport failures.
+
 ## [1.0.0-beta.11] - 2026-10-31
 
 ### Fixed

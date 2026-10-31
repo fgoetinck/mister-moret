@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+- Documentation: the `TryHttpOperation` examples no longer wrap `MisterMoret.Http`'s `ApiClient`, which now returns failed results for transport failures itself.
+
 ## [1.0.0-beta.3] - 2026-05-25
 
 ### Added

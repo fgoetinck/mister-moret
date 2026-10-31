@@ -1,15 +1,16 @@
 name: Publish NuGet Packages
 
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - main
+  push:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   publish:
-    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && (startsWith(github.head_ref, 'release/') || startsWith(github.head_ref, 'hotfix/')))
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.head_commit.message, '/release/') ||
+      contains(github.event.head_commit.message, '/hotfix/')
     runs-on: ubuntu-latest
     environment: nuget
     permissions:

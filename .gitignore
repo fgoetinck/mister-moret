@@ -372,4 +372,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/identifier.sqlite.claude/settings.local.json
+/identifier.sqlite
+
+# Claude Code local setup
+.claude/

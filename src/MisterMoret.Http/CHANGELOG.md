@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+- `ApiClient` no longer throws `JsonException` or `NotSupportedException` on empty, invalid JSON or non-JSON content-type (e.g. `text/html`) response bodies. A non-success response returns a failed `HttpResult<T>` with the status code and the fallback error message; a success response returns the "Failed to deserialize data." failure.
+
 ## [1.0.0-beta.10] - 2026-06-03
 
 ### Added

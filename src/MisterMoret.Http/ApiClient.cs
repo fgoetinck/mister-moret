@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -17,7 +18,9 @@ namespace MisterMoret.Http;
 /// On a non-success HTTP response, each method attempts to deserialize the response body into an internal
 /// <c>ApiErrorResponse</c> record and extract its <c>errors</c> array. When one or more errors are present they are
 /// forwarded directly to the returned <see cref="HttpResult{T}"/> failure. When the array is absent or empty, a
-/// generic fallback error message is used instead. In both cases the HTTP status code is preserved on the result.
+/// generic fallback error message is used instead; the same fallback applies when the error body is empty or not JSON.
+/// When a success response body cannot be deserialized (empty, invalid JSON or a non-JSON content type), the result is
+/// a failure with the message "Failed to deserialize data.". In all cases the HTTP status code is preserved on the result.
 /// Instances are created exclusively by <see cref="ApiClientFactory"/> and cannot be subclassed.
 /// </remarks>
 public sealed class ApiClient : IApiClient
@@ -140,14 +143,33 @@ public sealed class ApiClient : IApiClient
     {
         if (!response.IsSuccessStatusCode)
         {
-            var apiError = await response.Content.ReadFromJsonAsync<ApiErrorResponse>(JsonSerializerOptions, cancellationToken);
+            ApiErrorResponse? apiError = null;
+            try
+            {
+                apiError = await response.Content.ReadFromJsonAsync<ApiErrorResponse>(JsonSerializerOptions, cancellationToken);
+            }
+            catch (Exception ex) when (ex is JsonException or NotSupportedException)
+            {
+                // Empty body, invalid JSON or non-JSON content type (e.g. a bare 401/404 or an HTML proxy error page): fall back to the generic error message.
+            }
+
             if (apiError?.Errors?.Count > 0)
                 return HttpResult<TResponse>.Failure(apiError.Errors, response.StatusCode);
 
             return HttpResult<TResponse>.Failure(errorMessage, response.StatusCode);
         }
 
-        var data = await response.Content.ReadFromJsonAsync<TResponse>(JsonSerializerOptions, cancellationToken);
+        TResponse? data;
+        try
+        {
+            data = await response.Content.ReadFromJsonAsync<TResponse>(JsonSerializerOptions, cancellationToken);
+        }
+        catch (Exception ex) when (ex is JsonException or NotSupportedException)
+        {
+            // Empty body, invalid JSON or non-JSON content type on a success response.
+            return HttpResult<TResponse>.Failure(JsonDeserializationErrorMessage, response.StatusCode);
+        }
+
         if (data == null) return HttpResult<TResponse>.Failure(JsonDeserializationErrorMessage, response.StatusCode);
 
         return HttpResult<TResponse>.Success(data);

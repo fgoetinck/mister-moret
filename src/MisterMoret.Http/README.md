@@ -17,7 +17,7 @@ A simple and extensible **API client wrapper** for .NET, built on top of `IHttpC
 
 - **Named API Clients**: Easily register and use multiple API clients via `IApiClientFactory`.
 - **Typed Responses**: Automatic JSON (de)serialization into typed objects.
-- **Result Pattern Integration**: Returns `HttpResult<T>` instead of throwing exceptions for non-success status codes. When the server returns a structured `HttpResult` error body, its errors are surfaced directly; otherwise a generic failure is returned.
+- **Result Pattern Integration**: Returns `HttpResult<T>` instead of throwing for non-success status codes and transport failures. An `HttpRequestException` becomes a failed result with its `StatusCode` when set, otherwise 503 (connection, DNS, premature end of response, unknown) or 502 (other errors such as TLS/certificate or invalid responses), with the fixed message "Failed to reach the server.". An `HttpClient` timeout becomes 408 with "The request timed out.". Cancellation requested through the caller's `CancellationToken` still throws `OperationCanceledException`. When the server returns a structured `HttpResult` error body, its errors are surfaced directly; otherwise a generic failure is returned.
 - **Query Parameter Support**: Simplified way to pass query parameters via anonymous objects or classes.
 - **Cancellation Support**: Every HTTP verb method accepts an optional `CancellationToken` as its last parameter.
 - **Authentication Support**: Built-in bearer token injection via `IAccessTokenProvider`, designed for global/machine tokens (e.g. client credentials, API keys). Extensible for per-user scenarios via a custom `IAccessTokenProvider`.

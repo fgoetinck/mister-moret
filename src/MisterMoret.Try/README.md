@@ -162,8 +162,19 @@ else if (result.Code == HttpStatusCode.RequestTimeout)
 **Manual result** — use when you need control over the success status code:
 
 ```csharp
-var result = await TryHttpOperation.ExecuteAsync(() => _apiClient.GetAsync<User>("users/1"));
+using System.Net.Http.Json;
+
+var result = await TryHttpOperation.ExecuteAsync(async () =>
+{
+    var response = await _httpClient.GetAsync("users/1");
+    response.EnsureSuccessStatusCode();
+    var user = await response.Content.ReadFromJsonAsync<User>();
+    return HttpResult<User>.Success(user!, HttpStatusCode.OK);
+});
 ```
+
+> [!NOTE]
+> You do not need to wrap `MisterMoret.Http`'s `IApiClient` calls in `TryHttpOperation`: `ApiClient` already returns failed results for transport failures (connection errors, timeouts). Use `TryHttpOperation` for other operations that throw, such as raw `HttpClient` calls.
 
 #### Exception Mapping
 
@@ -182,7 +193,7 @@ All `TryHttpOperation.ExecuteAsync` overloads accept the same optional `Func<Exc
 
 ```csharp
 var result = await TryHttpOperation.ExecuteAsync(
-    () => _apiClient.GetAsync<User>("users/1"),
+    () => _repository.GetUserAsync(1),
     ex => "Upstream service is unavailable. Please try again later.");
 ```
 

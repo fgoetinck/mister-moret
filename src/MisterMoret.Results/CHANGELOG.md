@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0-beta.6] - 2026-11-22
+
+### Changed
+- The list-based `Failure` overloads of `Result`, `Result<T>`, `HttpResult` and `HttpResult<T>` now take `IEnumerable<string>` instead of `List<string>`, so another result's `Errors` (or an array) can be passed without `.ToList()`. This is binary breaking (recompile against this version) and source compatible for `List<string>` callers. `Failure` now copies the errors, so later changes to the caller's collection no longer affect the result.
+
+### Fixed
+- `Failure` with an empty error collection no longer creates a successful result; it throws `ArgumentException`. A `null` collection or a `null` single error throws `ArgumentNullException`. A result created by `Failure` always has `IsSuccess == false`.
+
 ## [1.0.0-beta.5] - 2026-05-25
 
 ### Changed

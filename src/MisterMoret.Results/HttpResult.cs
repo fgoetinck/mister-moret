@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using MisterMoret.Results.Interfaces;
@@ -27,7 +28,7 @@ public class HttpResult : IResult
     /// <summary>
     /// Gets the error messages that describe why the HTTP operation failed.
     /// The collection is empty when the result was created by <see cref="Success(HttpStatusCode)"/> and contains at least one entry
-    /// when the result was created by a <see cref="Failure(string, HttpStatusCode)"/> or <see cref="Failure(List{string}, HttpStatusCode)"/> overload.
+    /// when the result was created by a <see cref="Failure(string, HttpStatusCode)"/> or <see cref="Failure(IEnumerable{string}, HttpStatusCode)"/> overload.
     /// </summary>
     public IReadOnlyList<string>? Errors { get; protected init; } = new List<string>();
 
@@ -44,12 +45,14 @@ public class HttpResult : IResult
     /// <summary>
     /// Creates a failed result containing the supplied error messages and the specified HTTP status code.
     /// </summary>
-    /// <param name="errors">The error messages that describe the failure. Cannot be <see langword="null"/>.</param>
+    /// <param name="errors">The error messages that describe the failure. Must contain at least one message. The messages are copied, so later changes to <paramref name="errors"/> do not affect the result.</param>
     /// <param name="code">The HTTP status code that reflects the nature of the failure (for example, <see cref="HttpStatusCode.BadRequest"/> or <see cref="HttpStatusCode.InternalServerError"/>).</param>
-    /// <returns>An <see cref="HttpResult"/> whose <see cref="IsSuccess"/> property is <see langword="false"/>, whose <see cref="Errors"/> contains <paramref name="errors"/>, and whose <see cref="Code"/> is <paramref name="code"/>.</returns>
-    public static HttpResult Failure(List<string> errors, HttpStatusCode code)
+    /// <returns>An <see cref="HttpResult"/> whose <see cref="IsSuccess"/> property is <see langword="false"/>, whose <see cref="Errors"/> contains a copy of <paramref name="errors"/>, and whose <see cref="Code"/> is <paramref name="code"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="errors"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="errors"/> is empty.</exception>
+    public static HttpResult Failure(IEnumerable<string> errors, HttpStatusCode code)
     {
-        return new HttpResult { Errors = errors, Code = code };
+        return new HttpResult { Errors = Result.CopyErrors(errors), Code = code };
     }
 
     /// <summary>
@@ -58,8 +61,11 @@ public class HttpResult : IResult
     /// <param name="error">The error message that describes the failure. Cannot be <see langword="null"/>.</param>
     /// <param name="code">The HTTP status code that reflects the nature of the failure (for example, <see cref="HttpStatusCode.BadRequest"/> or <see cref="HttpStatusCode.InternalServerError"/>).</param>
     /// <returns>An <see cref="HttpResult"/> whose <see cref="IsSuccess"/> property is <see langword="false"/>, whose <see cref="Errors"/> contains <paramref name="error"/>, and whose <see cref="Code"/> is <paramref name="code"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
     public static HttpResult Failure(string error, HttpStatusCode code)
     {
+        ArgumentNullException.ThrowIfNull(error);
+
         return new HttpResult { Errors = new List<string> { error }, Code = code };
     }
-}
+}

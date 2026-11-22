@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+- Built against `MisterMoret.Results` 1.0.0-beta.6, whose list-based `Failure` overloads take `IEnumerable<string>`. Earlier `MisterMoret.Http` versions combined with `MisterMoret.Results` 1.0.0-beta.6 or later throw `MissingMethodException` at runtime, so update both packages together.
+
 ## [1.0.0-beta.12] - 2026-10-31
 
 ### Changed

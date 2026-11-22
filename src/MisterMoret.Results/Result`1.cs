@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MisterMoret.Results.Interfaces;
 
@@ -33,18 +34,23 @@ public class Result<T> : Result, IResult<T>
     /// </summary>
     /// <param name="error">The error message that describes the failure. Cannot be <see langword="null"/>.</param>
     /// <returns>A <see cref="Result{T}"/> whose <see cref="Result.IsSuccess"/> property is <see langword="false"/> and whose <see cref="Result.Errors"/> contains <paramref name="error"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
     public new static Result<T> Failure(string error)
     {
+        ArgumentNullException.ThrowIfNull(error);
+
         return new Result<T> { Errors = new List<string> { error } };
     }
 
     /// <summary>
     /// Creates a failed result containing the supplied error messages.
     /// </summary>
-    /// <param name="errors">The error messages that describe the failure. Cannot be <see langword="null"/>.</param>
-    /// <returns>A <see cref="Result{T}"/> whose <see cref="Result.IsSuccess"/> property is <see langword="false"/> and whose <see cref="Result.Errors"/> contains <paramref name="errors"/>.</returns>
-    public new static Result<T> Failure(List<string> errors)
+    /// <param name="errors">The error messages that describe the failure. Must contain at least one message. The messages are copied, so later changes to <paramref name="errors"/> do not affect the result.</param>
+    /// <returns>A <see cref="Result{T}"/> whose <see cref="Result.IsSuccess"/> property is <see langword="false"/> and whose <see cref="Result.Errors"/> contains a copy of <paramref name="errors"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="errors"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="errors"/> is empty.</exception>
+    public new static Result<T> Failure(IEnumerable<string> errors)
     {
-        return new Result<T> { Errors = errors };
+        return new Result<T> { Errors = Result.CopyErrors(errors) };
     }
-}
+}
